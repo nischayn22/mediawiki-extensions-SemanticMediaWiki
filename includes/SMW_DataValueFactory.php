@@ -69,6 +69,7 @@ class SMWDataValueFactory {
 		SMWDataItem::TYPE_BOOLEAN => '_boo', // Boolean type
 		SMWDataItem::TYPE_CONTAINER => '_rec', // Value list type (replacing former nary properties)
 		SMWDataItem::TYPE_GEO => '_geo', // Geographical coordinates
+		SMWDataItem::TYPE_GEOPOL => '_gpo', //Geographical polygon
 		SMWDataItem::TYPE_CONCEPT => '__con', // Special concept page type
 		SMWDataItem::TYPE_PROPERTY => '__pro', // Property type
 		// If either of the following two occurs, we want to see a PHP error:
@@ -251,6 +252,7 @@ class SMWDataValueFactory {
 			'_boo'  => SMWDataItem::TYPE_BOOLEAN, // Boolean type
 			'_rec'  => SMWDataItem::TYPE_CONTAINER, // Value list type (replacing former nary properties)
 			'_geo'  => SMWDataItem::TYPE_GEO, // Geographical coordinates
+			'_gpo'  => SMWDataItem::TYPE_GEOPOL, // Geographical polygon
 			'_qty'  => SMWDataItem::TYPE_NUMBER, // Type for numbers with units of measurement
 			// Special types are not avaialble directly for users (and have no local language name):
 			'__typ' => SMWDataItem::TYPE_URI, // Special type page type

@@ -69,6 +69,8 @@ abstract class SMWDataItem {
 	const TYPE_PROPERTY  = 11;
 	///  Data item ID for SMWDIError
 	const TYPE_ERROR     = 12;
+	/// Data item ID for SMWDIGeoPolygon
+	const TYPE_GEOPOL    = 13;
 
 	/**
 	 * Convenience method that returns a constant that defines the concrete
@@ -172,9 +174,9 @@ abstract class SMWDataItem {
 			case self::TYPE_CONCEPT:   return 'SMWDIConcept';
 			case self::TYPE_PROPERTY:  return 'SMWDIProperty';
 			case self::TYPE_ERROR:     return 'SMWDIError';
-			case self::TYPE_NOTYPE: default:
+			case self::TYPE_GEOPOL:    return 'SMWDIGeoPolygon';
+			case self::TYPE_NOTYPE:    default:
 				throw new InvalidArgumentException( "The value \"$diType\" is not a valid dataitem ID." );
 		}
 	}
-
 }

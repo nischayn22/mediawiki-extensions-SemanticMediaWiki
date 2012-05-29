@@ -162,6 +162,7 @@ function smwfRegisterClasses() {
 	$wgAutoloadClasses['SMWDIConcept']              = $diDir . 'SMW_DI_Concept.php';
 	$wgAutoloadClasses['SMWDIError']                = $diDir . 'SMW_DI_Error.php';
 	$wgAutoloadClasses['SMWDIGeoCoord']             = $diDir . 'SMW_DI_GeoCoord.php';
+	$wgAutoloadClasses['SMWDIGeoPolygon']           = $diDir . 'SMW_DI_GeoPolygon.php';
 	$wgAutoloadClasses['SMWContainerSemanticData']  = $diDir . 'SMW_DI_Container.php';
 	$wgAutoloadClasses['SMWDIContainer']            = $diDir . 'SMW_DI_Container.php';
 

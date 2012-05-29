@@ -106,6 +106,7 @@ class SMWSQLStore2 extends SMWStore {
 		SMWDataItem::TYPE_URI        => 'smw_atts2',
 		SMWDataItem::TYPE_TIME       => 'smw_atts2',
 		SMWDataItem::TYPE_GEO        => 'smw_coords', // currently created only if Semantic Maps are installed
+		SMWDataItem::TYPE_GEOPOL     => 'smw_polygon', // ^ what he said
 		SMWDataItem::TYPE_CONTAINER  => 'smw_rels2', // values of this type represented by internal objects, stored like pages in smw_rels2
 		SMWDataItem::TYPE_WIKIPAGE   => 'smw_rels2',
 		SMWDataItem::TYPE_CONCEPT    => 'smw_conc2', // unlikely to occur as value of a normal property
@@ -2531,7 +2532,13 @@ class SMWSQLStore2 extends SMWStore {
 			'sm_coords',
 			array( 'lat' => 'f', 'lon' => 'f', 'alt' => 'f' ),
 			array( 'lat', 'lon', 'alt' )
-		);		
+		);
+
+		self::$prop_tables['smw_polygon'] = new SMWSQLStore2Table(
+			'sm_polygon',
+			array( 's_id' => 'p','metadata' => 'l'),
+			array( 's_id','metadata' )
+		);
 
 		wfRunHooks( 'SMWPropertyTables', array( &self::$prop_tables ) );
 
