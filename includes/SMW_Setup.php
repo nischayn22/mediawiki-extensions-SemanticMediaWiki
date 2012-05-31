@@ -247,6 +247,7 @@ function smwfRegisterClasses() {
 	$wgAutoloadClasses['SMWSQLHelpers']             = $stoDir . 'SMW_SQLHelpers.php';
 	$wgAutoloadClasses['SMWSparqlStore']            = $stoDir . 'SMW_SparqlStore.php';
 	$wgAutoloadClasses['SMWSparqlStoreQueryEngine'] = $stoDir . 'SMW_SparqlStoreQueryEngine.php';
+	$wgAutoloadClasses['SMWSQLStore2Readers']       = $stoDir . 'SMW_SQLStore2_Readers.php';
 
 	// Special pages and closely related helper classes
 	$specDir = $smwgIP . 'specials/';
