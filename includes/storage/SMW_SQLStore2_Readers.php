@@ -66,13 +66,13 @@ Class SMWSQLStore2Readers {
 		}
 
 		// *** Read the data ***//
-		foreach ( $this->store::getPropertyTables() as $tid => $proptable ) {
+		foreach ( SMWSQLStore2::getPropertyTables() as $tid => $proptable ) {
 			if ( array_key_exists( $tid, $this->store->m_sdstate[$sid] ) ) continue;
 
 			if ( $filter !== false ) {
 				$relevant = false;
 				foreach ( $filter as $typeid ) {
-					$relevant = $relevant || $this->store::tableFitsType( $tid, $typeid );
+					$relevant = $relevant || SMWSQLStore2::tableFitsType( $tid, $typeid );
 				}
 				if ( !$relevant ) continue;
 			}
@@ -113,14 +113,14 @@ Class SMWSQLStore2Readers {
 			$result = $this->store->applyRequestOptions( $sd->getPropertyValues( $property ), $requestoptions );
 		} else { // no subject given, get all values for the given property
 			$pid = $this->store->getSMWPropertyID( $property );
-			$tableid = $this->store::findPropertyTableID( $property );
+			$tableid = SMWSQLStore2::findPropertyTableID( $property );
 
 			if ( ( $pid == 0 ) || ( $tableid === '' ) ) {
 				wfProfileOut( "SMWSQLStore2::getPropertyValues (SMW)" );
 				return array();
 			}
 
-			$proptables = $this->store::getPropertyTables();
+			$proptables = SMWSQLStore2::getPropertyTables();
 			$data = $this->fetchSemanticData( $pid, $property, $proptables[$tableid], false, $requestoptions );
 			$result = array();
 			$propertyTypeId = $property->findPropertyTypeID();
@@ -246,7 +246,7 @@ Class SMWSQLStore2Readers {
 		}
 
 		if ( !$issubject ) { // Needed to apply sorting/string matching in query; only with fixed property.
-			list( $sig, $valueIndex, $labelIndex ) = $this->store::getTypeSignature( $object->findPropertyTypeID() );
+			list( $sig, $valueIndex, $labelIndex ) = SMWSQLStore2::getTypeSignature( $object->findPropertyTypeID() );
 			$valuecolumn = ( array_key_exists( $valueIndex, $selectvalues ) ) ? $selectvalues[$valueIndex] : '';
 			$labelcolumn = ( array_key_exists( $labelIndex, $selectvalues ) ) ? $selectvalues[$labelIndex] : '';
 			$where .= $this->store->getSQLConditions( $requestoptions, $valuecolumn, $labelcolumn, $where !== '' );
@@ -262,9 +262,9 @@ Class SMWSQLStore2Readers {
 		foreach ( $res as $row ) {
 			if ( $issubject && !$proptable->fixedproperty ) { // use joined or predefined property name
 				if ( $proptable->specpropsonly ) {
-					$propertyname = array_search( $row->p_id, $this->store::$special_ids );
+					$propertyname = array_search( $row->p_id, SMWSQLStore2::$special_ids );
 					// Note: this may leave $propertyname false if a special type
-					// has been assigned to a proerty not in $this->store::$special_ids.
+					// has been assigned to a proerty not in SMWSQLStore2::$special_ids.
 					// Extensions could do this, but this will not work.
 					if ( $propertyname == false ) continue;
 				} else {
@@ -316,14 +316,14 @@ Class SMWSQLStore2Readers {
 		// First build $select, $from, and $where for the DB query
 		$where = $from = '';
 		$pid = $this->store->getSMWPropertyID( $property );
-		$tableid = $this->store::findPropertyTableID( $property );
+		$tableid = SMWSQLStore2::findPropertyTableID( $property );
 
 		if ( ( $pid == 0 ) || ( $tableid === '' ) ) {
 			wfProfileOut( "SMWSQLStoreLight::getPropertySubjects (SMW)" );
 			return array();
 		}
 
-		$proptables = $this->store::getPropertyTables();
+		$proptables = SMWSQLStore2::getPropertyTables();
 		$proptable = $proptables[$tableid];
 		$db = wfGetDB( DB_SLAVE );
 
@@ -387,11 +387,11 @@ Class SMWSQLStore2Readers {
 		if ( $value instanceof SMWDIContainer ) { // recursive handling of containers
 			$keys = array_keys( $proptable->objectfields );
 			$joinfield = "t$tableindex." . reset( $keys ); // this must be a type 'p' object
-			$proptables = $this->store::getPropertyTables();
+			$proptables = SMWSQLStore2::getPropertyTables();
 			$semanticData = $value->getSemanticData();
 
 			foreach ( $semanticData->getProperties() as $subproperty ) {
-				$tableid = $this->store::findPropertyTableID( $subproperty );
+				$tableid = SMWSQLStore2::findPropertyTableID( $subproperty );
 				$subproptable = $proptables[$tableid];
 
 				foreach ( $semanticData->getPropertyValues( $subproperty ) as $subvalue ) {
@@ -436,10 +436,10 @@ Class SMWSQLStore2Readers {
 
 	/**
 	 * @see SMWStore::getAllPropertySubjects
-	 * 
+	 *
 	 * @param SMWDIProperty $property
 	 * @param SMWRequestOptions $requestoptions
-	 * 
+	 *
 	 * @return array of SMWDIWikiPage
 	 */
 	public function getAllPropertySubjects( SMWDIProperty $property, $requestoptions = null ) {
@@ -476,7 +476,7 @@ Class SMWSQLStore2Readers {
 			$suboptions = null;
 		}
 
-		foreach ( $this->store::getPropertyTables() as $proptable ) {
+		foreach ( SMWSQLStore2::getPropertyTables() as $proptable ) {
 			$from = $db->tableName( $proptable->name );
 
 			if ( $proptable->idsubject ) {
@@ -517,9 +517,9 @@ Class SMWSQLStore2Readers {
 	/**
 	 * Implementation of SMWStore::getInProperties(). This function is meant to
 	 * be used for finding properties that link to wiki pages.
-	 * 
+	 *
 	 * @see SMWStore::getInProperties
-	 * 
+	 *
 	 * TODO: When used for other datatypes, the function may return too many
 	 * properties since it selects results by comparing the stored information
 	 * (DB keys) only, while not currently comparing the type of the returned
@@ -529,7 +529,7 @@ Class SMWSQLStore2Readers {
 	 *
 	 * @param SMWDataItem $value
 	 * @param SMWRequestOptions $requestoptions
-	 * 
+	 *
 	 * @return array of SMWWikiPageValue
 	 */
 	public function getInProperties( SMWDataItem $value, $requestoptions = null ) {
@@ -547,8 +547,8 @@ Class SMWSQLStore2Readers {
 			$suboptions = null;
 		}
 
-		$tableIds = $this->store::findAllDiTypeTableIds( $value->getDIType() );
-		$proptables = $this->store::getPropertyTables();
+		$tableIds = SMWSQLStore2::findAllDiTypeTableIds( $value->getDIType() );
+		$proptables = SMWSQLStore2::getPropertyTables();
 		foreach ( $tableIds as $tid ) {
 			$proptable = $proptables[$tid];
 			$where = $from = '';
@@ -585,5 +585,5 @@ Class SMWSQLStore2Readers {
 
 		return $result;
 	}
-	
+
 }
