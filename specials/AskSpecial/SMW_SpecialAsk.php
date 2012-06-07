@@ -66,6 +66,8 @@ class SMWAskPage extends SMWQuerySpecialPage {
 	 * which is the way that this page calls itself when data is submitted via the form (since the shape
 	 * of the parameters then is governed by the UI structure, as opposed to being governed by reason).
 	 *
+	 * TODO: most of this can probably be killed now we are using Validator
+	 *
 	 * @param string $p
 	 */
 	protected function extractQueryParameters( $p ) {
@@ -486,7 +488,7 @@ class SMWAskPage extends SMWQuerySpecialPage {
 		global $smwgQMaxInlineLimit;
 
 		$offset = $this->m_params['offset'];
-		$limit  = $this->m_params['limit'];
+		$limit  = $this->params['limit']->getValue();
 
 		// Prepare navigation bar.
 		if ( $offset > 0 ) {
