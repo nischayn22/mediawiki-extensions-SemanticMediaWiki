@@ -137,17 +137,29 @@ class SMWSQLStore2 extends SMWStore {
 
 	/// Default tables to use for storing data of certain types.
 	public static $di_type_tables = array(
-		SMWDataItem::TYPE_NUMBER     => 'smw_atts2',
-		SMWDataItem::TYPE_STRING     => 'smw_atts2',
-		SMWDataItem::TYPE_BLOB       => 'smw_text2',
-		SMWDataItem::TYPE_BOOLEAN    => 'smw_atts2',
-		SMWDataItem::TYPE_URI        => 'smw_atts2',
-		SMWDataItem::TYPE_TIME       => 'smw_atts2',
-		SMWDataItem::TYPE_GEO        => 'smw_coords', // currently created only if Semantic Maps are installed
-		SMWDataItem::TYPE_CONTAINER  => 'smw_rels2', // values of this type represented by internal objects, stored like pages in smw_rels2
-		SMWDataItem::TYPE_WIKIPAGE   => 'smw_rels2',
+		SMWDataItem::TYPE_NUMBER     => 'smw_di_number',
+		SMWDataItem::TYPE_STRING     => 'smw_di_string',
+		SMWDataItem::TYPE_BLOB       => 'smw_di_string',
+		SMWDataItem::TYPE_BOOLEAN    => 'smw_di_bool',
+		SMWDataItem::TYPE_URI        => 'smw_di_uri',
+		SMWDataItem::TYPE_TIME       => 'smw_di_time',
+		SMWDataItem::TYPE_GEO        => 'smw_di_coords', // currently created only if Semantic Maps are installed
+		SMWDataItem::TYPE_CONTAINER  => 'smw_di_container', // values of this type represented by internal objects, stored like pages in smw_rels2
+		SMWDataItem::TYPE_WIKIPAGE   => 'smw_di_wikipage',
 		SMWDataItem::TYPE_CONCEPT    => 'smw_conc2', // unlikely to occur as value of a normal property
-		SMWDataItem::TYPE_PROPERTY   => 'smw_atts2'  // unlikely to occur as value of any property
+		SMWDataItem::TYPE_PROPERTY   => 'smw_di_property'  // unlikely to occur as value of any property
+	);
+
+	/*
+	* These are fixed properties i.e. user defined tables having a dedicated table for them.
+	* Declare these properties as an array of their name (as seen on the wiki) => SMWDataItem::TYPE_proptype
+	* where proptype should be replaced with the appropriate type as seen in the array above
+	* Example usage 	'Age' => SMWDataItem::TYPE_NUMBER,
+	* TODO - Document on semantic-mediawiki.org , move these to somewhere else
+	*
+	* @since storerewrite
+	*/
+	public static $fixedProperties = array(
 	);
 
 	public function __construct() {
@@ -598,6 +610,11 @@ class SMWSQLStore2 extends SMWStore {
 		if ( $tableId == self::findDiTypeTableId( $dataItemId ) ) {
 			return true;
 		}
+		foreach ( self::$fixedProperties as $propertyLabel => $tableDItype ){
+			if( self::findFixedPropertyTableID($propertyLabel) == $tableId && $tableDItype == $dataItemId){
+				return true;
+			}
+		}
 		foreach ( self::$special_tables as $propertyKey => $specialTableId ) {
 			if ( $specialTableId == $tableId ) {
 				$diProperty = new SMWDIProperty( $propertyKey, false );
@@ -662,11 +679,26 @@ class SMWSQLStore2 extends SMWStore {
 	 */
 	public static function findPropertyTableID( SMWDIProperty $diProperty ) {
 		$propertyKey = $diProperty->getKey();
+		$propertyLabel = $diProperty->getLabel();
 		if ( array_key_exists( $propertyKey, self::$special_tables ) ) {
 			return self::$special_tables[$propertyKey];
+		} elseif ( array_key_exists( $propertyLabel, self::$fixedProperties ) ) {
+			return self::findFixedPropertyTableID($propertyLabel);
 		} else {
 			return self::findTypeTableId( $diProperty->findPropertyTypeID() );
 		}
+	}
+
+	/**
+	 * Retrieve the id of the fixed property table that is used for storing
+	 * values for the given property label. Make sure it is called only for
+	 * the fixed properties otherwise you have some errors.
+	 *
+	 * @param $propertyLabel string
+	 * @return string
+	 */
+	public static function findFixedPropertyTableID( $propertyLabel ) {
+		return 'smw_fixedproptable'.hash( 'md5' , $propertyLabel );
 	}
 
 	/**
@@ -1191,25 +1223,18 @@ class SMWSQLStore2 extends SMWStore {
 	 * @todo The concept table should make s_id a primary key; make this possible.
 	 */
 	public static function getPropertyTables() {
-		if ( count( self::$prop_tables ) > 0 ) return self::$prop_tables; // Don't initialise twice.
+		if ( count( self::$prop_tables ) > 0 ) {
+			return self::$prop_tables; // Don't initialise twice.
+		}
 
-		self::$prop_tables['smw_rels2'] = new SMWSQLStore2Table(
-			'smw_rels2',
-			array( 'o_id' => 'p' ),
-			array( 'o_id' )
-		);
+		//tables for each DI type
+		foreach( self::$di_type_tables as $tableDIType => $tableName ){
+			if( $tableName == 'smw_conc2' )
+				continue; //exceptional case, added later as special table
+			self::$prop_tables[$tableName] = SMWSQLStore2Table::newFromDIType( $tableDIType, $tableName );
+		}
 
-		self::$prop_tables['smw_atts2'] = new SMWSQLStore2Table(
-			'smw_atts2',
-			array( 'value_xsd' => 't', 'value_num' => 'f' ),
-			array( 'value_num', 'value_xsd' )
-		);
-
-		self::$prop_tables['smw_text2'] = new SMWSQLStore2Table(
-			'smw_text2',
-			array( 'value_blob' => 'l' )
-		);
-
+		//tables for special properties
 		self::$prop_tables['smw_spec2'] = new SMWSQLStore2Table(
 			'smw_spec2',
 			array( 'value_string' => 't' ),
@@ -1253,18 +1278,19 @@ class SMWSQLStore2 extends SMWStore {
 			'_CONC'
 		);
 
-		self::$prop_tables['smw_coords'] = new SMWSQLStore2Table(
-			'sm_coords',
-			array( 'lat' => 'f', 'lon' => 'f', 'alt' => 'f' ),
-			array( 'lat', 'lon', 'alt' )
-		);
-
 		wfRunHooks( 'SMWPropertyTables', array( &self::$prop_tables ) );
 
+		// TODO - Do we really need this??
 		foreach ( self::$prop_tables as $tid => $proptable ) { // fixed property tables are added to known "special" tables
 			if ( $proptable->fixedproperty != false ) {
 				self::$special_tables[$proptable->fixedproperty] = $tid;
 			}
+		}
+
+		//get all the tables for the properties that are declared as fixed (overly used and thus having separate tables)
+		foreach(self::$fixedProperties as $fixedPropertyLabel => $tableDIType){
+			$tableName = self::findFixedPropertyTableID ( $fixedPropertyLabel );
+			self::$prop_tables[$tableName] = SMWSQLStore2Table::newFromDIType( $tableDIType, $tableName, $fixedPropertyLabel );
 		}
 
 		return self::$prop_tables;
