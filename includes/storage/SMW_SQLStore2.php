@@ -1025,6 +1025,52 @@ class SMWSQLStore2 extends SMWStore {
 	}
 
 	/**
+	* Returns an array of hashes with table names as keys. These
+	* hashes are used to compare new data with old data for each
+	* property-value table when updating data
+	*
+	* since SMW.storerewrite
+	* @param $sid ID of the page as stored in smw_ids
+	* @return array
+	*/
+	public function getPropTableHashes( $sid ) {
+		$db = wfGetDB( DB_SLAVE );
+
+		$row = $db->selectRow(
+			'smw_ids',
+			array( 'smw_proptable_hash' ),
+			'smw_id=' . $sid ,
+			__METHOD__
+		);
+
+		if( $row === false && !is_null( $row->smw_proptable_hash ) ) {
+			$tableHashes = unserialize( $row->smw_proptable_hash );
+		}
+		else {
+			$tableHashes = array();
+		}
+
+		return $tableHashes;
+	}
+
+	/**
+	* Updates the proptable_hash for a given page.
+	*
+	* since SMW.storerewrite
+	* @param $sid ID of the page as stored in smw_ids
+	* @param array() of hash values with tablename as keys
+	*/
+	public function setPropTableHashes( $sid, array $newTableHashes ) {
+		$db = wfGetDB( DB_MASTER );
+		$db->update(
+			'smw_ids',
+			array( 'smw_proptable_hash' => serialize( $newTableHashes ) ),
+			array( 'smw_id' => $sid ),
+			__METHOD__
+		);
+	}
+
+	/**
 	 * Helper method to write information about some redirect. Various updates
 	 * can be necessary if redirects are resolved as identities in SMW. The
 	 * title and namespace of the affected page and of its updated redirect
