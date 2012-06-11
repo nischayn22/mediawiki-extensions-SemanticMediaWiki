@@ -6,74 +6,127 @@
  * records about data in SMW. Tables mostly differ in the composition of the
  * value, but also in whether the property is explicitly named (or fixed),
  * and in the way subject pages are referred to.
- * 
+ *
  * @file SMW_SQLStore2Table.php
  * @ingroup SMWStore
- * 
+ *
  * @author Markus Krötzsch
  * @author Jeroen De Dauw
  */
 class SMWSQLStore2Table {
-	
+
+	/**
+	* An array of table structure with DI type as keys
+	*
+	*/
+	protected static $tableStructure = array(
+		SMWDataItem::TYPE_NUMBER => array(
+			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
+			'indexes' => array( 'value_num', 'value_xsd' ),
+			),
+		SMWDataItem::TYPE_STRING => array(
+			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
+			'indexes' => array( 'value_num', 'value_xsd' ),
+			),
+		SMWDataItem::TYPE_BLOB => array(
+			'objectfields' => array( 'value_blob' => 'l' ),
+			'indexes' => array(),
+			),
+		SMWDataItem::TYPE_BOOLEAN => array(
+			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
+			'indexes' => array( 'value_num', 'value_xsd' ),
+			),
+		SMWDataItem::TYPE_URI => array(
+			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
+			'indexes' => array( 'value_num', 'value_xsd' ),
+			),
+		SMWDataItem::TYPE_TIME => array(
+			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
+			'indexes' => array( 'value_num', 'value_xsd' ),
+			),
+		SMWDataItem::TYPE_GEO => array(
+			'objectfields' => array( 'lat' => 'f', 'lon' => 'f', 'alt' => 'f' ),
+			'indexes' => array( 'lat', 'lon', 'alt' ),
+			),
+		SMWDataItem::TYPE_CONTAINER => array(
+			'objectfields' => array( 'o_id' => 'p' ),
+			'indexes' => array( 'o_id' ),
+			),
+		SMWDataItem::TYPE_WIKIPAGE => array(
+			'objectfields' => array( 'o_id' => 'p' ),
+			'indexes' => array( 'o_id' ),
+			),
+		SMWDataItem::TYPE_CONCEPT => array(
+			'objectfields' => array( 'concept_txt' => 'l', 'concept_docu' => 'l',
+				'concept_features' => 'n', 'concept_size' => 'n', 'concept_depth' => 'n',
+				'cache_date' => 'j', 'cache_count' => 'j' ),
+			'indexes' => array(),
+			),
+		SMWDataItem::TYPE_PROPERTY => array(
+			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
+			'indexes' => array( 'value_num', 'value_xsd' ),
+			),
+	);
+
 	/**
 	 * Name of the table in the DB.
-	 * 
+	 *
 	 * @var string
 	 */
 	public $name;
-	
+
 	/**
-	 * Array with entries "fieldname => typeid" where the types are as given 
+	 * Array with entries "fieldname => typeid" where the types are as given
 	 * for SMWSQLStore::getPropertyTables().
-	 * 
+	 *
 	 * @var array
 	 */
 	public $objectfields;
-	
+
 	/**
 	 * If the table is only for one property, this field holds its name.
 	 * Empty otherwise. Tables without a fixed property have a column "p_id"
 	 * for storing the SMW page id of the property.
-	 * 
+	 *
 	 * @var mixed String or false
 	 */
 	public $fixedproperty;
-	
+
 	/**
 	 * Strings of the form "field1,...,fieldN" for extra indexes that are to
 	 * be built for this table. All tables have indexes on subject column(s)
 	 * and property column (if any). Items can also be an array with the column
 	 * name as first element, and a index type as second elemet to allow for
 	 * custom index types.
-	 * 
+	 *
 	 * @var array of string
 	 */
 	public $indexes;
-	
+
 	/**
 	 * Boolean that states how subjects are stored. If true, a column "s_id"
 	 * with an SMW page id is used. If false, two columns "s_title" and
 	 * "s_namespace" are used. The latter de-normalized form cannot store
 	 * sortkeys and interwiki prefixes, and is used only for the redirect
 	 * table. New tables should really keep the default "true" here.
-	 * 
+	 *
 	 * @var boolean
 	 */
 	public $idsubject = true;
-	
+
 	/**
 	 * State if a table is reserved for "special properties" (properties that
 	 * are pre-defined in SMW). This is mainly for optimization, since we do
 	 * not want to join with the SMW page id table to find the property for an
 	 * ID when it is likely that the ID is fixed and cached.
-	 * 
+	 *
 	 * @var unknown_type
 	 */
 	public $specpropsonly = false;
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param string $name
 	 * @param array $objectFields Associative array
 	 * @param mixed $indexes Array of string or a single string
@@ -92,5 +145,43 @@ class SMWSQLStore2Table {
 	public function getFieldSignature() {
 		return implode( '', $this->objectfields );
 	}
-	
+
+	/**
+	* Factory method to create an instance for a given
+	* DI type and the given table name.
+	*
+	* @since SMW.storerewrite
+	*
+	* @param $DIType constant
+	* @param $tableName string
+	* @param $fixedProperty
+	* @return $table SMWSQLStore2Table
+	*/
+	public static function newFromDIType( $DIType, $tableName, $fixedProperty = false ) {
+		$table = new SMWSQLStore2Table( $tableName, array(), array(), $fixedProperty );
+		$table->setFields( $DIType );
+
+		return $table;
+	}
+
+	/**
+	 * Sets the fields and indexes for the tables based on the DI type of the property-values.
+	 *
+	 * Tables declare value columns ("object fields") by specifying their name
+	 * and type. Types are given using letters:
+	 * - t for strings of the same maximal length as MediaWiki title names,
+	 * - l for arbitrarily long strings; searching/sorting with such data may
+	 * be limited for performance reasons,
+	 * - w for strings as used in MediaWiki for encoding interwiki prefixes
+	 * - n for namespace numbers (or other similar integers)
+	 * - f for floating point numbers of double precision
+	 * - p for a reference to an SMW ID as stored in the smw_ids table; this
+	 *   corresponds to a data entry of ID "tnwt".
+	 * @param const $DIType
+	 */
+	protected function setFields( $DIType ) {
+		$fields = self::$tableStructure[$DIType];
+		$this->objectfields = $fields['objectfields'];
+		$this->indexes = $fields['indexes'];
+	}
 }
