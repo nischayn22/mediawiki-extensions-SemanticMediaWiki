@@ -97,7 +97,8 @@ Class SMWSQLStore2SetupHandlers {
 				'smw_title' => $dbtypes['t'] . ' NOT NULL',
 				'smw_iw' => $dbtypes['w'] . ' NOT NULL',
 				'smw_subobject' => $dbtypes['t'] . ' NOT NULL',
-				'smw_sortkey' => $dbtypes['t']  . ' NOT NULL'
+				'smw_sortkey' => $dbtypes['t']  . ' NOT NULL',
+				'smw_proptable_hash' => $dbtypes['l']
 			),
 			$db,
 			$reportTo

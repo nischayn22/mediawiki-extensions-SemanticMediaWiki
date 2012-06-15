@@ -65,7 +65,6 @@ Class SMWSQLStore2Writers {
 		wfRunHooks( 'SMWSQLStore2::updateDataBefore', array( $this, $data ) );
 
 		$subject = $data->getSubject();
-		$this->store->deleteSemanticData( $subject );
 
 		$redirects = $data->getPropertyValues( new SMWDIProperty( '_REDI' ) );
 		if ( count( $redirects ) > 0 ) {
@@ -91,8 +90,36 @@ Class SMWSQLStore2Writers {
 		$this->prepareDBUpdates( $updates, $data, $sid, $subject );
 
 		$db = wfGetDB( DB_MASTER );
-		foreach ( $updates as $tablename => $uvals ) {
-			if ( $tablename != 'smw_conc2' ) $db->insert( $tablename, $uvals, "SMW::updateData$tablename" );
+
+		$oldHashes = $this->store->getPropTableHashes( $sid );
+		$hashIsChanged = false;
+		foreach ( SMWSQLStore2::getPropertyTables() as $tableId => $tableDeclaration ) {
+			$tableName = $tableDeclaration->name;
+			if ( $tableName == 'smw_conc2' || $tableName == 'smw_redi2' ) {
+				continue;	//smw_redi2 and smw_conc2 are not considered here.
+			}
+			if ( array_key_exists( $tableName, $updates ) ) {
+				$newHash = md5( serialize( $updates[$tableName] ) );
+				if ( array_key_exists( $tableName, $oldHashes ) && $newHash === $oldHashes[$tableName] ) {
+					//table was used before and value didn't change, nothing to do here
+					continue;
+				} else {
+					//data didn't exist before or has changed
+					$this->deleteTableSemanticData( $subject, $tableDeclaration );
+					$db->insert( $tableName, $updates[$tableName], "SMW::updateData$tableName" );
+					$oldHashes[$tableName] = $newHash;
+					$hashIsChanged = true;
+				}
+			} elseif ( array_key_exists( $tableName, $oldHashes ) ) {
+				//data existed before but not now
+				$this->deleteTableSemanticData( $subject, $tableDeclaration );
+				unset($oldHashes[$tableName]);
+				$hashIsChanged = true;
+			}
+		}
+
+		if ( $hashIsChanged ) {
+			$this->store->setPropTableHashes( $sid, $oldHashes );
 		}
 
 		// Concepts are not just written but carefully updated,
@@ -326,5 +353,40 @@ Class SMWSQLStore2Writers {
 		}
 
 		wfProfileOut( "SMWSQLStore2::changeTitle (SMW)" );
+	}
+
+	/**
+	 * Delete all semantic data stored for the given subject on the specified table.
+	 * Note - if the table is smw_conc2 or smw_redi2 nothing is done as doDataUpdate handles them itself
+	 *
+	 * @param $subject SMWDIWikiPage
+	 * @param $table SMW_SQLStore2Table
+	 */
+	protected function deleteTableSemanticData( SMWDIWikiPage $subject, $table ) {
+		if ( $subject->getSubobjectName() !== '' ) {
+			return; // not needed, and would mess up data
+		}
+
+		if ( $table->name == 'smw_conc2' || $table->name == 'smw_redi2' ) {
+			return;
+		}
+
+		$id = $this->store->getSMWPageID( $subject->getDBkey(), $subject->getNamespace(), $subject->getInterwiki(), '', false );
+		if ( $id == 0 ) {
+			return;
+		}
+		$db = wfGetDB( DB_MASTER );
+		if ( $table->idsubject ) {
+			$db->delete( $table->name, array( 's_id' => $id ), __METHOD__ );
+		} else {
+			$db->delete(
+				$table->name,
+				array(
+					's_title' => $subject->getDBkey(),
+					's_namespace' => $subject->getNamespace()
+				),
+				__METHOD__
+			);
+		}
 	}
 }
