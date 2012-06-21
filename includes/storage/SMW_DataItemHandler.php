@@ -11,7 +11,6 @@
 /**
  * Objects of this type represent all store layout that is known about a certain dataitem
  *
- *
  * @since SMW.storerewrite
  *
  * @ingroup SMWDataItemsHandlers
@@ -20,15 +19,15 @@ class SMWDataItemHandler {
 
 	/**
 	 * Gets an object of the dataitem handler from the dataitem provided.
+	 *
 	 * @since SMW.storerewrite
 	 *
 	 * @param $dataItem SMWDataItem
 	 *
 	 * @throws MWException
-	 * @return DataItemHandler
-	 *
+	 * @return SMWDataItemHandler
 	 */
-	public static function getDataItemHandlerForDI( $di, $store ) {
+	public static function getDataItemHandlerForDI( SMWDataItem $di, $store ) {
 		switch ( $di->getDIType() ) {
 			case SMWDataItem::TYPE_NUMBER:    return new SMWDIHandlerNumber;
 			case SMWDataItem::TYPE_STRING:    return new SMWDIHandlerString;
