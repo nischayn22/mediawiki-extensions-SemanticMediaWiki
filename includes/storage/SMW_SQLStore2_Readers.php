@@ -413,23 +413,12 @@ Class SMWSQLStore2Readers {
 				}
 			}
 		} elseif ( !is_null( $value ) ) { // add conditions for given value
-			/// TODO This code still partly supports some abandoned flexibility of the DBkeys system;
-			/// this is not very clean (see break; below) and should be improved
-			$dbkeys = SMWCompatibilityHelpers::getDBkeysFromDataItem( $value );
-			$i = 0;
-
-			foreach ( $proptable->objectfields as $fieldname => $typeid ) {
-				if ( $i >= count( $dbkeys ) ) break;
-
-				if ( $typeid == 'p' ) { // Special case: page id, resolve this in advance
-					$oid = $this->store->getSMWPageID( $value->getDBkey(), $value->getNamespace(), $value->getInterwiki(), $value->getSubobjectName() );
-					$where .= ( $where ? ' AND ' : '' ) . "t$tableindex.$fieldname=" . $db->addQuotes( $oid );
-					break;
-				} elseif ( $typeid != 'l' ) { // plain value, but not a text blob
-					$where .= ( $where ? ' AND ' : '' ) . "t$tableindex.$fieldname=" . $db->addQuotes( $dbkeys[$i] );
-				}
-
-				$i += 1;
+			///since SMW.storerewrite we get the array of where conds (fieldname=>value) from the DIHander class
+			//This causes a database error when called for special properties as they have different table structure
+			//unknown to the DIHandlers. Do we really need different table structure for special properties?
+			$handler = SMWDataItemHandler::getDataItemHandlerForDI( $value, $this->store );
+			foreach ( $handler->getWhereConds( $value ) as $fieldname => $value ) {
+				$where .= ( $where ? ' AND ' : '' ) . "t$tableindex.$fieldname=" . $db->addQuotes( $value );
 			}
 		}
 	}

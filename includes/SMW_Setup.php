@@ -255,6 +255,20 @@ function smwfRegisterClasses() {
 	$wgAutoloadClasses['SMWSQLStore2SpecialPageHandlers']  = $stoDir . 'SMW_SQLStore2_SpecialPageHandlers.php';
 	$wgAutoloadClasses['SMWSQLStore2SetupHandlers']        = $stoDir . 'SMW_SQLStore2_SetupHandlers.php';
 
+	$wgAutoloadClasses['SMWDataItemHandler']               = $stoDir . 'SMW_DataItemHandler.php';
+	$wgAutoloadClasses['SMWDIHandlerProperty']             = $stoDir . 'SMW_DIHandler_Property.php';
+	$wgAutoloadClasses['SMWDIHandlerBoolean']              = $stoDir . 'SMW_DIHandler_Bool.php';
+	$wgAutoloadClasses['SMWDIHandlerNumber']               = $stoDir . 'SMW_DIHandler_Number.php';
+	$wgAutoloadClasses['SMWDIHandlerBlob']                 = $stoDir . 'SMW_DIHandler_Blob.php';
+	$wgAutoloadClasses['SMWDIHandlerString']               = $stoDir . 'SMW_DIHandler_String.php';
+	$wgAutoloadClasses['SMWDIHandlerUri']                  = $stoDir . 'SMW_DIHandler_URI.php';
+	$wgAutoloadClasses['SMWDIHandlerWikiPage']             = $stoDir . 'SMW_DIHandler_WikiPage.php';
+	$wgAutoloadClasses['SMWDIHandlerTime']                 = $stoDir . 'SMW_DIHandler_Time.php';
+	$wgAutoloadClasses['SMWDIHandlerConcept']              = $stoDir . 'SMW_DIHandler_Concept.php';
+	$wgAutoloadClasses['SMWDIHandlerGeoCoord']             = $stoDir . 'SMW_DIHandler_GeoCoord.php';
+	$wgAutoloadClasses['SMWDIHandlerContainer']            = $stoDir . 'SMW_DIHandler_Container.php';
+
+
 	// Special pages and closely related helper classes
 	$specDir = $smwgIP . 'specials/';
 	$wgAutoloadClasses['SMWQueryPage']                 = $specDir . 'QueryPages/SMW_QueryPage.php';

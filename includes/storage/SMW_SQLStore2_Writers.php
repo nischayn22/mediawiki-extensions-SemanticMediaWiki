@@ -220,18 +220,11 @@ Class SMWSQLStore2Writers {
 					reset( $proptable->objectfields );
 					$uvals[key( $proptable->objectfields )] = $subObjectId;
 				} else {
-					$dbkeys = SMWCompatibilityHelpers::getDBkeysFromDataItem( $di );
-					reset( $dbkeys );
-
-					foreach ( $proptable->objectfields as $fieldname => $typeid ) {
-						if ( $typeid != 'p' ) {
-							$uvals[$fieldname] = current( $dbkeys );
-						} else {
-							$uvals[$fieldname] = $this->store->makeSMWPageID( $di->getDBkey(), $di->getNamespace(), $di->getInterwiki(), $di->getSubobjectName() );
-						}
-
-						next( $dbkeys );
-					}
+					///since SMW.storerewrite we get the array of where conds (fieldname=>value) from the DIHander class
+					//This causes a database error when called for special properties as they have different table structure
+					//unknown to the DIHandlers. Do we really need different table structure for special properties?
+					$handler = SMWDataItemHandler::getDataItemHandlerForDI( $di, $this->store );
+					$uvals = array_merge( $uvals, $handler->getInsertValues( $di ) );
 				}
 
 				if ( !array_key_exists( $proptable->name, $updates ) ) {
