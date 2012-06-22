@@ -1275,54 +1275,24 @@ class SMWSQLStore2 extends SMWStore {
 
 		//tables for each DI type
 		foreach( self::$di_type_tables as $tableDIType => $tableName ){
-			if( $tableName == 'smw_conc2' )
-				continue; //exceptional case, added later as special table
 			self::$prop_tables[$tableName] = SMWSQLStore2Table::newFromDIType( $tableDIType, $tableName );
 		}
 
 		//tables for special properties
-		self::$prop_tables['smw_spec2'] = new SMWSQLStore2Table(
-			'smw_spec2',
-			array( 'value_string' => 't' ),
-			array( 's_id,p_id' )
-		);
+		foreach( self::$special_tables as $key => $tableName ){
+			$typeId = SMWDIProperty::getPredefinedPropertyTypeId( $key );
+			$diType = SMWDataValueFactory::getDataItemId( $typeId );
+			self::$prop_tables[$tableName] = SMWSQLStore2Table::newFromDIType( $diType, $tableName );
+		}
 		self::$prop_tables['smw_spec2']->specpropsonly = true;
-
-		self::$prop_tables['smw_subs2'] = new SMWSQLStore2Table(
-			'smw_subs2',
-			array( 'o_id' => 'p' ),
-			array( 'o_id' ),
-			'_SUBC'
-		);
-
-		self::$prop_tables['smw_subp2'] = new SMWSQLStore2Table(
-			'smw_subp2',
-		    array( 'o_id' => 'p' ),
-			array( 'o_id' ),
-			'_SUBP'
-		);
-
-		self::$prop_tables['smw_inst2'] = new SMWSQLStore2Table(
-			'smw_inst2',
-		    array( 'o_id' => 'p' ),
-			array( 'o_id' ),
-			'_INST'
-		);
-
-		self::$prop_tables['smw_redi2'] = new SMWSQLStore2Table(
-			'smw_redi2',
-			array( 'o_id' => 'p' ),
-			array( 'o_id' ),
-			'_REDI'
-		);
+		self::$prop_tables['smw_subs2']->fixedproperty = '_SUBC';
+		self::$prop_tables['smw_subp2']->fixedproperty = '_SUBP';
+		self::$prop_tables['smw_inst2']->fixedproperty = '_INST';
+		self::$prop_tables['smw_redi2']->fixedproperty = '_REDI';
 		self::$prop_tables['smw_redi2']->idsubject = false;
 
-		self::$prop_tables['smw_conc2'] = new SMWSQLStore2Table(
-			'smw_conc2',
-			array( 'concept_txt' => 'l', 'concept_docu' => 'l', 'concept_features' => 'n', 'concept_size' => 'n', 'concept_depth' => 'n','cache_date' => 'j', 'cache_count' => 'j' ),
-			array( ),
-			'_CONC'
-		);
+		//TODO - smw_conc2 appears in di_type_tables as well special_tables. Fix this
+		self::$prop_tables['smw_conc2']->fixedproperty = '_CONC';
 
 		wfRunHooks( 'SMWPropertyTables', array( &self::$prop_tables ) );
 
