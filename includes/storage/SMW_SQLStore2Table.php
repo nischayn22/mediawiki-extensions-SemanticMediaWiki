@@ -16,59 +16,6 @@
 class SMWSQLStore2Table {
 
 	/**
-	* An array of table structure with DI type as keys
-	*
-	*/
-	protected static $tableStructure = array(
-		SMWDataItem::TYPE_NUMBER => array(
-			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
-			'indexes' => array( 'value_num', 'value_xsd' ),
-			),
-		SMWDataItem::TYPE_STRING => array(
-			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
-			'indexes' => array( 'value_num', 'value_xsd' ),
-			),
-		SMWDataItem::TYPE_BLOB => array(
-			'objectfields' => array( 'value_blob' => 'l' ),
-			'indexes' => array(),
-			),
-		SMWDataItem::TYPE_BOOLEAN => array(
-			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
-			'indexes' => array( 'value_num', 'value_xsd' ),
-			),
-		SMWDataItem::TYPE_URI => array(
-			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
-			'indexes' => array( 'value_num', 'value_xsd' ),
-			),
-		SMWDataItem::TYPE_TIME => array(
-			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
-			'indexes' => array( 'value_num', 'value_xsd' ),
-			),
-		SMWDataItem::TYPE_GEO => array(
-			'objectfields' => array( 'lat' => 'f', 'lon' => 'f', 'alt' => 'f' ),
-			'indexes' => array( 'lat', 'lon', 'alt' ),
-			),
-		SMWDataItem::TYPE_CONTAINER => array(
-			'objectfields' => array( 'o_id' => 'p' ),
-			'indexes' => array( 'o_id' ),
-			),
-		SMWDataItem::TYPE_WIKIPAGE => array(
-			'objectfields' => array( 'o_id' => 'p' ),
-			'indexes' => array( 'o_id' ),
-			),
-		SMWDataItem::TYPE_CONCEPT => array(
-			'objectfields' => array( 'concept_txt' => 'l', 'concept_docu' => 'l',
-				'concept_features' => 'n', 'concept_size' => 'n', 'concept_depth' => 'n',
-				'cache_date' => 'j', 'cache_count' => 'j' ),
-			'indexes' => array(),
-			),
-		SMWDataItem::TYPE_PROPERTY => array(
-			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
-			'indexes' => array( 'value_num', 'value_xsd' ),
-			),
-	);
-
-	/**
 	 * Name of the table in the DB.
 	 *
 	 * @var string
@@ -180,7 +127,8 @@ class SMWSQLStore2Table {
 	 * @param const $DIType
 	 */
 	protected function setFields( $DIType ) {
-		$fields = self::$tableStructure[$DIType];
+		$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $DIType, smwfGetStore() );
+		$fields = $handler::getTableFields();
 		$this->objectfields = $fields['objectfields'];
 		$this->indexes = $fields['indexes'];
 	}

@@ -47,11 +47,11 @@ class SMWDIHandlerConcept extends SMWDataItemHandler {
 	 */
 	public function getWhereConds( SMWDataItem $dataItem ) {
 		return array(
-			$dataItem->getConceptQuery(),
-			$dataItem->getDocumentation(),
-			$dataItem->getQueryFeatures(),
-			$dataItem->getSize(),
-			$dataItem->getDepth()
+			'concept_txt' => $dataItem->getConceptQuery(),
+			'concept_docu' => $dataItem->getDocumentation(),
+			'concept_features' => $dataItem->getQueryFeatures(),
+			'concept_size' => $dataItem->getSize(),
+			'concept_depth' => $dataItem->getDepth()
 		);
 	}
 
@@ -67,15 +67,46 @@ class SMWDIHandlerConcept extends SMWDataItemHandler {
 	 * @return array
 	 */
 	public function getInsertValues( SMWDataItem $dataItem ) {
-		if( $dataItem->getBoolean() ) {
-			return array(
-				'value_xsd' => '1',
-				'value_num' => 1
-			);
-		} else
-			return array(
-				'value_xsd' => '0',
-				'value_num' => 0
-			);
+		return array(
+			'concept_txt' => $dataItem->getConceptQuery(),
+			'concept_docu' => $dataItem->getDocumentation(),
+			'concept_features' => $dataItem->getQueryFeatures(),
+			'concept_size' => $dataItem->getSize(),
+			'concept_depth' => $dataItem->getDepth()
+		);
+	}
+
+	/**
+	 * Method to return the field used to select this type of DataItem
+	 * @since SMW.storerewrite
+	 * @return integer
+	 */
+	public function getIndexField() {
+		return 0;
+	}
+
+	/**
+	 * Method to return the field used to select this type of DataItem
+	 * using the label
+	 * @since SMW.storerewrite
+	 * @return integer
+	 */
+	public function getLabelField() {
+		return 0;
+	}
+
+	/**
+	 * Method to create a dataitem from a type ID and array of DB keys.
+	 *
+	 * @param $dbkeys array of mixed
+	 *
+	 * @return SMWDataItem
+	 */
+	static public function dataItemFromDBKeys( $typeId, $dbkeys ) {
+		if ( count( $dbkeys ) >= 5 ) {
+			return new SMWDIConcept( $dbkeys[0], smwfXMLContentEncode( $dbkeys[1] ),
+				$dbkeys[2], $dbkeys[3], $dbkeys[4] );
+		}
+		throw new SMWDataItemException( 'Failed to create data item from DB keys.' );
 	}
 }

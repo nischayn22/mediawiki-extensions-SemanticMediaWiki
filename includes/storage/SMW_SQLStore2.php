@@ -585,15 +585,17 @@ class SMWSQLStore2 extends SMWStore {
 	/**
 	 * For a given SMW type id, obtain the "signature" from which the
 	 * appropriate property table and information about sorting/filtering
-	 * data of this type can be obtained. The result is an array of three
-	 * entries: a signature string, the index of the value field, and
+	 * data of this type can be obtained. The result is an array of two
+	 * entries: the index of the value field, and
 	 * the index of the label label field.
 	 */
 	public static function getTypeSignature( $typeid ) {
 		$dataItemId = SMWDataValueFactory::getDataItemId( $typeid );
-		return array( SMWCompatibilityHelpers::getSignatureFromDataItemId( $dataItemId, $typeid ),
-		              SMWCompatibilityHelpers::getIndexFromDataItemId( $dataItemId, $typeid, false ),
-		              SMWCompatibilityHelpers::getIndexFromDataItemId( $dataItemId, $typeid, true ) );
+		$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $dataItemId, $this );
+		return array(
+			$handler->getIndexField(),
+			$handler->getLabelField()
+		);
 	}
 
 	/**

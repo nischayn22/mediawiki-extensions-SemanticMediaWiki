@@ -46,4 +46,36 @@ class SMWDIHandlerString extends SMWDataItemHandler {
 		//TODO - what to insert in value_num?? How was this done before?
 		return array( 'value_xsd' => $dataItem->getString() );
 	}
+
+	/**
+	 * Method to return the field used to select this type of DataItem
+	 * @since SMW.storerewrite
+	 * @return integer
+	 */
+	public function getIndexField() {
+		//is the typeid still relevant here? How to use that?
+		return 0;
+	}
+
+	/**
+	 * Method to return the field used to select this type of DataItem
+	 * using the label
+	 * @since SMW.storerewrite
+	 * @return integer
+	 */
+	public function getLabelField() {
+		return 0;
+	}
+
+	/**
+	 * Method to create a dataitem from a type ID and array of DB keys.
+	 *
+	 * @since SMW.storerewrite
+	 * @param $dbkeys array of mixed
+	 *
+	 * @return SMWDataItem
+	 */
+	static public function dataItemFromDBKeys( $typeId, $dbkeys ) {
+		return new SMWDIString( $dbkeys[0] );
+	}
 }

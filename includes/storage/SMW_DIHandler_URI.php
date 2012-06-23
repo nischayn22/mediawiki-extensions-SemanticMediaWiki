@@ -46,4 +46,39 @@ class SMWDIHandlerUri extends SMWDataItemHandler {
 		//TODO - what to insert in value_num?? How was this done before?
 		return array( 'value_xsd' => $dataItem->getSerialization() );
 	}
+
+	/**
+	 * Method to return the field used to select this type of DataItem
+	 * @since SMW.storerewrite
+	 * @return integer
+	 */
+	public function getIndexField() {
+		return 0;
+	}
+
+	/**
+	 * Method to return the field used to select this type of DataItem
+	 * using the label
+	 * @since SMW.storerewrite
+	 * @return integer
+	 */
+	public function getLabelField() {
+		return 0;
+	}
+
+	/**
+	 * Method to create a dataitem from a type ID and array of DB keys.
+	 *
+	 * @since SMW.storerewrite
+	 * @param $dbkeys array of mixed
+	 *
+	 * @return SMWDataItem
+	 */
+	static public function dataItemFromDBKeys( $typeId, $dbkeys ) {
+		if ( $typeId == '__typ' && $dbkeys[0]{0} == '_' ) { // b/c: old data stored as type ids
+			return SMWTypesValue::getTypeUriFromTypeId( $dbkeys[0] );
+		} else {
+			return SMWDIUri::doUnserialize( $dbkeys[0] );
+		}
+	}
 }

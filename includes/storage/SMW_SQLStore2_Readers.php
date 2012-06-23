@@ -129,7 +129,9 @@ Class SMWSQLStore2Readers {
 			if ( $propertyDiId == SMWDataItem::TYPE_CONTAINER ) {
 				foreach ( $data as $dbkeys ) {
 					try {
-						$diSubWikiPage = SMWCompatibilityHelpers::dataItemFromDBKeys( '_wpg', $dbkeys );
+						$dataItemId = SMWDataValueFactory::getDataItemId( '_wpg' );
+						$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $dataItemId, $this->store );
+						$diSubWikiPage = $handler::dataItemFromDBKeys( '_wpg', $dbkeys );
 						$semanticData = new SMWContainerSemanticData( $diSubWikiPage );
 						$semanticData->copyDataFrom( $this->getSemanticData( $diSubWikiPage ) );
 						$result[] = new SMWDIContainer( $semanticData );
@@ -141,7 +143,9 @@ Class SMWSQLStore2Readers {
 			} else {
 				foreach ( $data as $dbkeys ) {
 					try {
-						$result[] = SMWCompatibilityHelpers::dataItemFromDBKeys( $propertyTypeId, $dbkeys );
+						$dataItemId = SMWDataValueFactory::getDataItemId( $propertyTypeId );
+						$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $dataItemId, $this->store );
+						$result[] = $handler::dataItemFromDBKeys( $propertyTypeId, $dbkeys );
 					} catch ( SMWDataItemException $e ) {
 						// maybe type assignment changed since data was stored;
 						// don't worry, but we can only drop the data here
@@ -246,7 +250,7 @@ Class SMWSQLStore2Readers {
 		}
 
 		if ( !$issubject ) { // Needed to apply sorting/string matching in query; only with fixed property.
-			list( $sig, $valueIndex, $labelIndex ) = SMWSQLStore2::getTypeSignature( $object->findPropertyTypeID() );
+			list( $valueIndex, $labelIndex ) = SMWSQLStore2::getTypeSignature( $object->findPropertyTypeID() );
 			$valuecolumn = ( array_key_exists( $valueIndex, $selectvalues ) ) ? $selectvalues[$valueIndex] : '';
 			$labelcolumn = ( array_key_exists( $labelIndex, $selectvalues ) ) ? $selectvalues[$labelIndex] : '';
 			$where .= $this->store->getSQLConditions( $requestoptions, $valuecolumn, $labelcolumn, $where !== '' );
@@ -416,7 +420,7 @@ Class SMWSQLStore2Readers {
 			///since SMW.storerewrite we get the array of where conds (fieldname=>value) from the DIHander class
 			//This causes a database error when called for special properties as they have different table structure
 			//unknown to the DIHandlers. Do we really need different table structure for special properties?
-			$handler = SMWDataItemHandler::getDataItemHandlerForDI( $value, $this->store );
+			$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $value->getDIType(), $this->store );
 			foreach ( $handler->getWhereConds( $value ) as $fieldname => $value ) {
 				$where .= ( $where ? ' AND ' : '' ) . "t$tableindex.$fieldname=" . $db->addQuotes( $value );
 			}

@@ -53,4 +53,36 @@ class SMWDIHandlerGeoCoord extends SMWDataItemHandler {
 			'lon' => $coordinateSet['lon']
 		);
 	}
+
+	/**
+	 * Method to return the field used to select this type of DataItem
+	 * @since SMW.storerewrite
+	 * @return integer
+	 */
+	public function getIndexField() {
+		//TODO - Why use lat? why was only lat used till now?
+		return 0;
+	}
+
+	/**
+	 * Method to return the field used to select this type of DataItem
+	 * using the label
+	 * @since SMW.storerewrite
+	 * @return integer
+	 */
+	public function getLabelField() {
+		return 0;
+	}
+
+	/**
+	 * Method to create a dataitem from a type ID and array of DB keys.
+	 *
+	 * @since SMW.storerewrite
+	 * @param $dbkeys array of mixed
+	 *
+	 * @return SMWDataItem
+	 */
+	static public function dataItemFromDBKeys( $typeId, $dbkeys ) {
+		return new SMWDIGeoCoord( array( 'lat' => (float)$dbkeys[0], 'lon' => (float)$dbkeys[1] ) );
+	}
 }

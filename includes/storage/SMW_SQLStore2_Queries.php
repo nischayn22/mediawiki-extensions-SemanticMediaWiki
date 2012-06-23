@@ -608,7 +608,7 @@ class SMWSQLStore2QueryEngine {
 			return;
 		}
 
-		list( $sig, $valueindex, $labelindex ) = SMWSQLStore2::getTypeSignature( $typeid );
+		list( $valueindex, $labelindex ) = SMWSQLStore2::getTypeSignature( $typeid );
 		$sortkey = $property->getKey(); // TODO: strictly speaking, the DB key is not what we want here, since sortkey is based on a "wiki value"
 
 		// *** Basic settings: table, joinfield, and objectfields ***//

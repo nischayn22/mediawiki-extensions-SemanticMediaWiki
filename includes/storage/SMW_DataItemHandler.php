@@ -22,13 +22,13 @@ class SMWDataItemHandler {
 	 *
 	 * @since SMW.storerewrite
 	 *
-	 * @param $dataItem SMWDataItem
+	 * @param $dataItemID constant
 	 *
 	 * @throws MWException
 	 * @return SMWDataItemHandler
 	 */
-	public static function getDataItemHandlerForDI( SMWDataItem $di, $store ) {
-		switch ( $di->getDIType() ) {
+	public static function getDataItemHandlerForDIType( $diType, $store ) {
+		switch ( $diType ) {
 			case SMWDataItem::TYPE_NUMBER:    return new SMWDIHandlerNumber;
 			case SMWDataItem::TYPE_STRING:    return new SMWDIHandlerString;
 			case SMWDataItem::TYPE_BLOB:      return new SMWDIHandlerBlob;
@@ -36,7 +36,7 @@ class SMWDataItemHandler {
 			case SMWDataItem::TYPE_URI:       return new SMWDIHandlerUri;
 			case SMWDataItem::TYPE_TIME:      return new SMWDIHandlerTime;
 			case SMWDataItem::TYPE_GEO:       return new SMWDIHandlerGeoCoord;
-			case SMWDataItem::TYPE_CONTAINER: return new SMWDIHandlerContainer;
+			case SMWDataItem::TYPE_CONTAINER: return new SMWDIHandlerContainer ( $store );
 			case SMWDataItem::TYPE_WIKIPAGE:  return new SMWDIHandlerWikiPage ( $store );
 			case SMWDataItem::TYPE_CONCEPT:   return new SMWDIHandlerConcept;
 			case SMWDataItem::TYPE_PROPERTY:  return new SMWDIHandlerProperty;

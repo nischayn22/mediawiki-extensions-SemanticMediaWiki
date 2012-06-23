@@ -69,4 +69,55 @@ class SMWDIHandlerTime extends SMWDataItemHandler {
 			'value_num' => $dataItem->getSortKey()
 			);
 	}
+
+	/**
+	 * Method to return the field used to select this type of DataItem
+	 * @since SMW.storerewrite
+	 * @return integer
+	 */
+	public function getIndexField() {
+		return 1;
+	}
+
+	/**
+	 * Method to return the field used to select this type of DataItem
+	 * using the label
+	 * @since SMW.storerewrite
+	 * @return integer
+	 */
+	public function getLabelField() {
+		return 0;
+	}
+
+	/**
+	 * Method to create a dataitem from a type ID and array of DB keys.
+	 *
+	 * @since SMW.storerewrite
+	 * @param $dbkeys array of mixed
+	 *
+	 * @return SMWDataItem
+	 */
+	static public function dataItemFromDBKeys( $typeId, $dbkeys ) {
+		$timedate = explode( 'T', $dbkeys[0], 2 );
+		if ( ( count( $dbkeys ) == 2 ) && ( count( $timedate ) == 2 ) ) {
+			$date = reset( $timedate );
+			$year = $month = $day = $hours = $minutes = $seconds = $timeoffset = false;
+			if ( ( end( $timedate ) === '' ) ||
+				 ( SMWTimeValue::parseTimeString( end( $timedate ), $hours, $minutes, $seconds, $timeoffset ) == true ) ) {
+				$d = explode( '/', $date, 3 );
+				if ( count( $d ) == 3 ) {
+					list( $year, $month, $day ) = $d;
+				} elseif ( count( $d ) == 2 ) {
+					list( $year, $month ) = $d;
+				} elseif ( count( $d ) == 1 ) {
+					list( $year ) = $d;
+				}
+				if ( $month === '' ) $month = false;
+				if ( $day === '' ) $day = false;
+				$calendarmodel = SMWDITime::CM_GREGORIAN;
+				return new SMWDITime( $calendarmodel, $year, $month, $day, $hours, $minutes, $seconds );
+			}
+		}
+		throw new SMWDataItemException( 'Failed to create data item from DB keys.' );		
+	}
 }
