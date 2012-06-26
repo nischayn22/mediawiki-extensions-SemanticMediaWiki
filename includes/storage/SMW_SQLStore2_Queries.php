@@ -87,7 +87,7 @@ class SMWSQLStore2QueryEngine {
 	 * Refresh the concept cache for the given concept.
 	 *
 	 * @param $concept Title
-	 * 
+	 *
 	 * @return array
 	 */
 	public function refreshConceptCache( Title $concept ) {
@@ -203,14 +203,14 @@ class SMWSQLStore2QueryEngine {
 	 * processing -- not all DBMS might be able in seeing this by themselves.
 	 *
 	 * @param SMWQuery $query
-	 * 
+	 *
 	 * @return mixed: depends on $query->querymode
 	 */
 	public function getQueryResult( SMWQuery $query ) {
 		global $smwgIgnoreQueryErrors, $smwgQSortingSupport;
 
-		if ( ( !$smwgIgnoreQueryErrors || $query->getDescription() instanceof SMWThingDescription ) && 
-		     $query->querymode != SMWQuery::MODE_DEBUG && 
+		if ( ( !$smwgIgnoreQueryErrors || $query->getDescription() instanceof SMWThingDescription ) &&
+		     $query->querymode != SMWQuery::MODE_DEBUG &&
 		     count( $query->getErrors() ) > 0 ) {
 			return new SMWQueryResult( $query->getDescription()->getPrintrequests(), $query, array(), $this->m_store, false );
 			// NOTE: we check this here to prevent unnecessary work, but we check
@@ -261,8 +261,8 @@ class SMWSQLStore2QueryEngine {
 		}
 
 		// Possibly stop if new errors happened:
-		if ( !$smwgIgnoreQueryErrors && 
-                     $query->querymode != SMWQuery::MODE_DEBUG && 
+		if ( !$smwgIgnoreQueryErrors &&
+                     $query->querymode != SMWQuery::MODE_DEBUG &&
                      count( $this->m_errors ) > 0 ) {
 			$query->addErrors( $this->m_errors );
 			return new SMWQueryResult( $query->getDescription()->getPrintrequests(), $query, array(), $this->m_store, false );
@@ -297,7 +297,7 @@ class SMWSQLStore2QueryEngine {
 	 *
 	 * @param SMWQuery $query
 	 * @param integer $rootid
-	 * 
+	 *
 	 * @return string
 	 */
 	protected function getDebugQueryResult( SMWQuery $query, $rootid ) {
@@ -341,7 +341,7 @@ class SMWSQLStore2QueryEngine {
 	 *
 	 * @param SMWQuery $query
 	 * @param integer $rootid
-	 * 
+	 *
 	 * @return integer
 	 */
 	protected function getCountQueryResult( SMWQuery $query, $rootid ) {
@@ -651,7 +651,7 @@ class SMWSQLStore2QueryEngine {
 		// *** Add conditions on the value of the property ***//
 		if ( ( count( $objectfields ) == 1 ) && ( reset( $objectfields ) == 'p' ) ) { // page description, process like main query
 			$sub = $this->compileQueries( $valuedesc );
-			
+
 			$objectfield = array_keys( $objectfields );
 			$objectfield = reset( $objectfield );
 
@@ -746,7 +746,8 @@ class SMWSQLStore2QueryEngine {
 
 		if ( $description instanceof SMWValueDescription ) {
 			$dataItem = $description->getDataItem();
-			$keys = SMWCompatibilityHelpers::getDBkeysFromDataItem( $dataItem );
+			$diHandler = SMWDataItemHandler::getDataItemHandlerForDIType( $dataItem->getDIType() );
+			$keys = $diHandler->getWhereConds( $dataItem );
 
 			// Try comparison based on value field and comparator.
 			if ( $valueIndex >= 0 ) {
@@ -767,14 +768,16 @@ class SMWSQLStore2QueryEngine {
 					if ( $customSQL ) {
 						$where = $customSQL;
 					} else {
-						$value = $keys[$valueIndex];
+						//Hack to get to the field used as index
+						$value = array_values( $keys );
+						$value = $value[$valueIndex];
 
 						switch ( $description->getComparator() ) {
 							case SMW_CMP_EQ: $comparator = '='; break;
 							case SMW_CMP_LESS: $comparator = '<'; break;
 							case SMW_CMP_GRTR: $comparator = '>'; break;
 							case SMW_CMP_LEQ: $comparator = '<='; break;
-							case SMW_CMP_GEQ: $comparator = '>='; break;							
+							case SMW_CMP_GEQ: $comparator = '>='; break;
 							case SMW_CMP_NEQ: $comparator = '!='; break;
 							case SMW_CMP_LIKE: case SMW_CMP_NLKE:
 								$comparator = ' LIKE ';
@@ -790,20 +793,8 @@ class SMWSQLStore2QueryEngine {
 			}
 
 			if ( $where === '' ) { // comparators did not apply; match all fields
-				$i = 0;
-
-				foreach ( $proptable->objectfields as $fname => $ftype ) {
-					if ( $i >= count( $keys ) ) break;
-
-					if ( $ftype == 'p' ) { // Special case: page id, resolve this in advance
-						$oid = $this->getSMWPageID( $dataItem->getDBkey(), $dataItem->getNamespace(), $dataItem->getInterwiki(), $dataItem->getSubobjectName() );
-						$where .= ( $where ? ' AND ' : '' ) . "{$query->alias}.$fname=" . $this->m_dbs->addQuotes( $oid );
-						break;
-					} elseif ( $ftype != 'l' ) { // plain value, but not a text blob
-						$where .= ( $where ? ' AND ' : '' ) . "{$query->alias}.$fname=" . $this->m_dbs->addQuotes( $keys[$i] );
-					}
-
-					$i++;
+				foreach ( $keys as $fieldname => $value ) {
+					$where .= ( $where ? ' AND ' : '' ) . "{$query->alias}.$fieldname=" . $this->m_dbs->addQuotes( $value );
 				}
 			}
 

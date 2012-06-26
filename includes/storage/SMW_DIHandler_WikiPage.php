@@ -32,7 +32,7 @@ class SMWDIHandlerWikiPage extends SMWDataItemHandler {
 	 * @return array
 	 */
 	public function getWhereConds( SMWDataItem $di) {
-		$oid = smwfGetStore()->makeSMWPageID( $di->getDBkey(), $di->getNamespace(), $di->getInterwiki(), $di->getSubobjectName() );
+		$oid = smwfGetStore()->getSMWPageID( $di->getDBkey(), $di->getNamespace(), $di->getInterwiki(), $di->getSubobjectName() );
 		return array( 'o_id' => $oid );
 	}
 
