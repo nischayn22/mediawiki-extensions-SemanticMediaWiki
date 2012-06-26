@@ -23,7 +23,7 @@ class SMWDIHandlerContainer extends SMWDataItemHandler {
 		return array(
 			'objectfields' => array( 'o_id' => 'p' ),
 			'indexes' => array( 'o_id' ),
-			);
+		);
 	}
 
 	/**
@@ -80,10 +80,10 @@ class SMWDIHandlerContainer extends SMWDataItemHandler {
 		$semanticData = SMWContainerSemanticData::makeAnonymousContainer();
 		foreach ( reset( $dbkeys ) as $value ) {
 			if ( is_array( $value ) && ( count( $value ) == 2 ) ) {
-				$diP = new SMWDIProperty( reset( $value ), false );
-				$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $diP->getDIType() );
-				$diV = $handler::dataItemFromDBKeys( $diP->findPropertyTypeID(), end( $value ) );
-				$semanticData->addPropertyObjectValue( $diP, $diV );
+				$diProperty = new SMWdiPropertyroperty( reset( $value ), false );
+				$diHandler = SMWDataItemHandler::getDataItemHandlerForDIType( $diProperty->getDIType() );
+				$diValue= $diHandler::dataItemFromDBKeys( $diProperty->findPropertyTypeID(), end( $value ) );
+				$semanticData->addPropertyObjectValue( $diProperty, $diValue );
 			}
 		}
 		return new SMWDIContainer( $semanticData );

@@ -23,7 +23,7 @@ class SMWDIHandlerBlob extends SMWDataItemHandler {
 		return array(
 			'objectfields' => array( 'value_blob' => 'l' ),
 			'indexes' => array(),
-			);
+		);
 	}
 
 	/**

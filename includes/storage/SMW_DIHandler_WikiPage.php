@@ -23,7 +23,7 @@ class SMWDIHandlerWikiPage extends SMWDataItemHandler {
 		return array(
 			'objectfields' => array( 'o_id' => 'p' ),
 			'indexes' => array( 'o_id' ),
-			);
+		);
 	}
 
 	/**

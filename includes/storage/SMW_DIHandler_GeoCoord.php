@@ -23,7 +23,7 @@ class SMWDIHandlerGeoCoord extends SMWDataItemHandler {
 		return array(
 			'objectfields' => array( 'lat' => 'f', 'lon' => 'f', 'alt' => 'f' ),
 			'indexes' => array( 'lat', 'lon', 'alt' ),
-			);
+		);
 	}
 
 	/**

@@ -23,7 +23,7 @@ class SMWDIHandlerString extends SMWDataItemHandler {
 		return array(
 			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
 			'indexes' => array( 'value_num', 'value_xsd' ),
-			);
+		);
 	}
 
 	/**
