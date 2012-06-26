@@ -591,7 +591,7 @@ class SMWSQLStore2 extends SMWStore {
 	 */
 	public static function getTypeSignature( $typeid ) {
 		$dataItemId = SMWDataValueFactory::getDataItemId( $typeid );
-		$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $dataItemId, $this );
+		$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $dataItemId );
 		return array(
 			$handler->getIndexField(),
 			$handler->getLabelField()

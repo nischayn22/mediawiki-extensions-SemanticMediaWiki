@@ -130,7 +130,7 @@ Class SMWSQLStore2Readers {
 				foreach ( $data as $dbkeys ) {
 					try {
 						$dataItemId = SMWDataValueFactory::getDataItemId( '_wpg' );
-						$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $dataItemId, $this->store );
+						$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $dataItemId );
 						$diSubWikiPage = $handler::dataItemFromDBKeys( '_wpg', $dbkeys );
 						$semanticData = new SMWContainerSemanticData( $diSubWikiPage );
 						$semanticData->copyDataFrom( $this->getSemanticData( $diSubWikiPage ) );
@@ -144,7 +144,7 @@ Class SMWSQLStore2Readers {
 				foreach ( $data as $dbkeys ) {
 					try {
 						$dataItemId = SMWDataValueFactory::getDataItemId( $propertyTypeId );
-						$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $dataItemId, $this->store );
+						$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $dataItemId );
 						$result[] = $handler::dataItemFromDBKeys( $propertyTypeId, $dbkeys );
 					} catch ( SMWDataItemException $e ) {
 						// maybe type assignment changed since data was stored;
@@ -420,7 +420,7 @@ Class SMWSQLStore2Readers {
 			///since SMW.storerewrite we get the array of where conds (fieldname=>value) from the DIHander class
 			//This causes a database error when called for special properties as they have different table structure
 			//unknown to the DIHandlers. Do we really need different table structure for special properties?
-			$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $value->getDIType(), $this->store );
+			$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $value->getDIType() );
 			foreach ( $handler->getWhereConds( $value ) as $fieldname => $value ) {
 				$where .= ( $where ? ' AND ' : '' ) . "t$tableindex.$fieldname=" . $db->addQuotes( $value );
 			}

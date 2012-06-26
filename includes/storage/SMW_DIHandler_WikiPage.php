@@ -15,19 +15,6 @@
 class SMWDIHandlerWikiPage extends SMWDataItemHandler {
 
 	/**
-	 * The store used by this store handler
-	 *
-	 * @since SMW.storerewrite
-	 * @var SMWSQLStore2
-	 */
-	protected $store;
-
-
-	public function __construct( &$parentstore ) {
-		$this->store = $parentstore;
-	}
-
-	/**
 	 * Method to return array of fields and indexes for a DI type
 	 *
 	 * @return array
@@ -45,7 +32,7 @@ class SMWDIHandlerWikiPage extends SMWDataItemHandler {
 	 * @return array
 	 */
 	public function getWhereConds( SMWDataItem $di) {
-		$oid = $this->store->makeSMWPageID( $di->getDBkey(), $di->getNamespace(), $di->getInterwiki(), $di->getSubobjectName() );
+		$oid = smwfGetStore()->makeSMWPageID( $di->getDBkey(), $di->getNamespace(), $di->getInterwiki(), $di->getSubobjectName() );
 		return array( 'o_id' => $oid );
 	}
 
@@ -57,7 +44,7 @@ class SMWDIHandlerWikiPage extends SMWDataItemHandler {
 	 * @return array
 	 */
 	public function getInsertValues( SMWDataItem $di ) {
-		$oid = $this->store->makeSMWPageID( $di->getDBkey(), $di->getNamespace(), $di->getInterwiki(), $di->getSubobjectName() );
+		$oid = smwfGetStore()->makeSMWPageID( $di->getDBkey(), $di->getNamespace(), $di->getInterwiki(), $di->getSubobjectName() );
 		return array( 'o_id' => $oid );
 	}
 

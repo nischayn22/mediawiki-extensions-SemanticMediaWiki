@@ -15,19 +15,6 @@
 class SMWDIHandlerContainer extends SMWDataItemHandler {
 
 	/**
-	 * The store used by this store handler
-	 *
-	 * @since SMW.storerewrite
-	 * @var SMWSQLStore2
-	 */
-	protected $store;
-
-
-	public function __construct( &$parentstore ) {
-		$this->store = $parentstore;
-	}
-
-	/**
 	 * Method to return array of fields and indexes for a DI type
 	 *
 	 * @return array
@@ -94,7 +81,7 @@ class SMWDIHandlerContainer extends SMWDataItemHandler {
 		foreach ( reset( $dbkeys ) as $value ) {
 			if ( is_array( $value ) && ( count( $value ) == 2 ) ) {
 				$diP = new SMWDIProperty( reset( $value ), false );
-				$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $diP->getDIType(), $this->store );
+				$handler = SMWDataItemHandler::getDataItemHandlerForDIType( $diP->getDIType() );
 				$diV = $handler::dataItemFromDBKeys( $diP->findPropertyTypeID(), end( $value ) );
 				$semanticData->addPropertyObjectValue( $diP, $diV );
 			}
