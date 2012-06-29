@@ -50,21 +50,21 @@ class SMWDIHandlerString extends SMWDataItemHandler {
 	/**
 	 * Method to return the field used to select this type of DataItem
 	 * @since SMW.storerewrite
-	 * @return integer
+	 * @return string
 	 */
 	public function getIndexField() {
 		//is the typeid still relevant here? How to use that?
-		return 0;
+		return 'value_xsd';
 	}
 
 	/**
 	 * Method to return the field used to select this type of DataItem
 	 * using the label
 	 * @since SMW.storerewrite
-	 * @return integer
+	 * @return string
 	 */
 	public function getLabelField() {
-		return 0;
+		return 'value_xsd';
 	}
 
 	/**

@@ -49,22 +49,20 @@ class SMWDIHandlerBlob extends SMWDataItemHandler {
 	/**
 	 * Method to return the field used to select this type of DataItem
 	 * @since SMW.storerewrite
-	 * @return integer
+	 * @return string
 	 */
 	public function getIndexField() {
-	//TODO What should be returned here? Nothing was done earlier
-		return -1;
+		return '';
 	}
 
 	/**
 	 * Method to return the field used to select this type of DataItem
 	 * using the label
 	 * @since SMW.storerewrite
-	 * @return integer
+	 * @return string
 	 */
 	public function getLabelField() {
-	//TODO What should be returned here? Nothing was done earlier
-		return -1;
+		return '';
 	}
 
 	/**

@@ -50,23 +50,23 @@ class SMWDIHandlerWikiPage extends SMWDataItemHandler {
 
 	/**
 	 * Method to return the field used to select this type of DataItem
+	 * Take care we are returning the field from the ID table, so do a proper JOIN
 	 * @since SMW.storerewrite
-	 * @return integer
+	 * @return string
 	 */
 	public function getIndexField() {
-		//returning 3 so fetchSemanticData will use smw_sortkey
-		return 3;
+		return 'smw_sortkey';
 	}
 
 	/**
 	 * Method to return the field used to select this type of DataItem
-	 * using the label
+	 * using the label. Take care we are returning the field from the 
+	 * ID table, so do a proper JOIN
 	 * @since SMW.storerewrite
-	 * @return integer
+	 * @return string
 	 */
 	public function getLabelField() {
-		//returning 3 so fetchSemanticData will use smw_sortkey
-		return 3;
+		return 'smw_sortkey';
 	}
 
 	/**

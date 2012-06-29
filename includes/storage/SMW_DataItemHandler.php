@@ -47,18 +47,26 @@ abstract class SMWDataItemHandler {
 
 	/**
 	 * Method to return the field used to select this type of DataItem
+	 * Careful when modifying these; the rest of the code assumes the following
+	 * 1 - return column name if present in the same table (hence no join needed with smw_ids)
+	 * 2 - return column name of starting with 'smw' if the column is present in smw_ids (see WikiPage)
+	 * 3 - return '' if no such column exists
+	 *
 	 * @since SMW.storerewrite
-	 * @return integer
-	 * TODO - modify this to return the field instead of the int
+	 * @return string
 	 */
 	abstract public function getIndexField();
 
 	/**
 	 * Method to return the field used to select this type of DataItem
 	 * using the label
+	 * Careful when modifying these; the rest of the code assumes the following
+	 * 1 - return column name if present in the same table (hence no join needed with smw_ids)
+	 * 2 - return column name of starting with 'smw' if the column is present in smw_ids (see WikiPage)
+	 * 3 - return '' if no such column exists
+	 *
 	 * @since SMW.storerewrite
-	 * @return integer
-	 * TODO - modify this to return the field instead of the int
+	 * @return string
 	 */
 	abstract public function getLabelField();
 

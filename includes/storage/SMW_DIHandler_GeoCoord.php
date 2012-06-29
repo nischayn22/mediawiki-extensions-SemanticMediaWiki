@@ -57,21 +57,21 @@ class SMWDIHandlerGeoCoord extends SMWDataItemHandler {
 	/**
 	 * Method to return the field used to select this type of DataItem
 	 * @since SMW.storerewrite
-	 * @return integer
+	 * @return string
 	 */
 	public function getIndexField() {
 		//TODO - Why use lat? why was only lat used till now?
-		return 0;
+		return 'lat';
 	}
 
 	/**
 	 * Method to return the field used to select this type of DataItem
 	 * using the label
 	 * @since SMW.storerewrite
-	 * @return integer
+	 * @return string
 	 */
 	public function getLabelField() {
-		return 0;
+		return 'lat';
 	}
 
 	/**

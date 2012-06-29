@@ -250,10 +250,19 @@ Class SMWSQLStore2Readers {
 		}
 
 		if ( !$issubject ) { // Needed to apply sorting/string matching in query; only with fixed property.
-			list( $valueIndex, $labelIndex ) = SMWSQLStore2::getTypeSignature( $object->findPropertyTypeID() );
-			$valuecolumn = ( array_key_exists( $valueIndex, $selectvalues ) ) ? $selectvalues[$valueIndex] : '';
-			$labelcolumn = ( array_key_exists( $labelIndex, $selectvalues ) ) ? $selectvalues[$labelIndex] : '';
-			$where .= $this->store->getSQLConditions( $requestoptions, $valuecolumn, $labelcolumn, $where !== '' );
+			list( $valueField, $labelField ) = SMWSQLStore2::getTypeSignature( $object->findPropertyTypeID() );
+
+			//Hacky, we assume that valueFields that are in smw_ids table start with 'smw'
+			//the alias for smw_ids table is o0 (assigned above)
+			if( substr( $valueField, 0, 3 ) == 'smw' ) {
+				$valueField = "o0.".$valueField;
+			}
+
+			if( substr( $labelField, 0, 3 ) == 'smw' ) {
+				$labelField = "o0.".$labelField;
+			}
+
+			$where .= $this->store->getSQLConditions( $requestoptions, $valueField, $labelField, $where !== '' );
 		} else {
 			$valuecolumn = $labelcolumn = '';
 		}

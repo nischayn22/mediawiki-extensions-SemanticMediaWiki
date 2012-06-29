@@ -50,20 +50,20 @@ class SMWDIHandlerUri extends SMWDataItemHandler {
 	/**
 	 * Method to return the field used to select this type of DataItem
 	 * @since SMW.storerewrite
-	 * @return integer
+	 * @return string
 	 */
 	public function getIndexField() {
-		return 0;
+		return 'value_num';
 	}
 
 	/**
 	 * Method to return the field used to select this type of DataItem
 	 * using the label
 	 * @since SMW.storerewrite
-	 * @return integer
+	 * @return string
 	 */
 	public function getLabelField() {
-		return 0;
+		return 'value_xsd';
 	}
 
 	/**
