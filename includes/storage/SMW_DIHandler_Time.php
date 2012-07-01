@@ -19,7 +19,7 @@ class SMWDIHandlerTime extends SMWDataItemHandler {
 	 *
 	 * @return array
 	 */
-	static public function getTableFields(){
+	public function getTableFields(){
 		return array(
 			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
 			'indexes' => array( 'value_num', 'value_xsd' ),
@@ -97,7 +97,7 @@ class SMWDIHandlerTime extends SMWDataItemHandler {
 	 *
 	 * @return SMWDataItem
 	 */
-	static public function dataItemFromDBKeys( $typeId, $dbkeys ) {
+	public function dataItemFromDBKeys( $typeId, $dbkeys ) {
 		$timedate = explode( 'T', $dbkeys[0], 2 );
 		if ( ( count( $dbkeys ) == 2 ) && ( count( $timedate ) == 2 ) ) {
 			$date = reset( $timedate );

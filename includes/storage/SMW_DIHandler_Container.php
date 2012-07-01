@@ -19,7 +19,7 @@ class SMWDIHandlerContainer extends SMWDataItemHandler {
 	 *
 	 * @return array
 	 */
-	static public function getTableFields(){
+	public function getTableFields(){
 		return array(
 			'objectfields' => array( 'o_id' => 'p' ),
 			'indexes' => array( 'o_id' ),
@@ -73,7 +73,7 @@ class SMWDIHandlerContainer extends SMWDataItemHandler {
 	 *
 	 * @return SMWDataItem
 	 */
-	static public function dataItemFromDBKeys( $typeId, $dbkeys ) {
+	public function dataItemFromDBKeys( $typeId, $dbkeys ) {
 		// provided for backwards compatibility only;
 		// today containers are read from the store as substructures,
 		// not retrieved as single complex values
@@ -82,7 +82,7 @@ class SMWDIHandlerContainer extends SMWDataItemHandler {
 			if ( is_array( $value ) && ( count( $value ) == 2 ) ) {
 				$diProperty = new SMWdiPropertyroperty( reset( $value ), false );
 				$diHandler = SMWDataItemHandler::getDataItemHandlerForDIType( $diProperty->getDIType() );
-				$diValue= $diHandler::dataItemFromDBKeys( $diProperty->findPropertyTypeID(), end( $value ) );
+				$diValue= $diHandler->dataItemFromDBKeys( $diProperty->findPropertyTypeID(), end( $value ) );
 				$semanticData->addPropertyObjectValue( $diProperty, $diValue );
 			}
 		}

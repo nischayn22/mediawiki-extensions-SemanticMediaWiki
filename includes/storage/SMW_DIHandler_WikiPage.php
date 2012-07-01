@@ -19,7 +19,7 @@ class SMWDIHandlerWikiPage extends SMWDataItemHandler {
 	 *
 	 * @return array
 	 */
-	static public function getTableFields(){
+	public function getTableFields(){
 		return array(
 			'objectfields' => array( 'o_id' => 'p' ),
 			'indexes' => array( 'o_id' ),
@@ -77,7 +77,7 @@ class SMWDIHandlerWikiPage extends SMWDataItemHandler {
 	 *
 	 * @return SMWDataItem
 	 */
-	static public function dataItemFromDBKeys( $typeId, $dbkeys ) {
+	public function dataItemFromDBKeys( $typeId, $dbkeys ) {
 		if ( $typeId == '__spf' ) {
 			$pagedbkey = str_replace( ' ', '_', $dbkeys[0] );
 			return new SMWDIWikiPage( $pagedbkey, SF_NS_FORM, '' );

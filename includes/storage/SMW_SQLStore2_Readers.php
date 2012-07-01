@@ -3,7 +3,7 @@
 /**
  * Class Handling all the read methods for SMWSQLStore
  *
- * @author Markus Krötzsch
+ * @author Markus Krï¿½tzsch
  * @author Jeroen De Dauw
  * @author Nischay Nahata
  *
@@ -131,7 +131,7 @@ Class SMWSQLStore2Readers {
 					try {
 						$dataItemId = SMWDataValueFactory::getDataItemId( '_wpg' );
 						$diHandler = SMWDataItemHandler::getDataItemHandlerForDIType( $dataItemId );
-						$diSubWikiPage = $diHandler::dataItemFromDBKeys( '_wpg', $dbkeys );
+						$diSubWikiPage = $diHandler->dataItemFromDBKeys( '_wpg', $dbkeys );
 						$semanticData = new SMWContainerSemanticData( $diSubWikiPage );
 						$semanticData->copyDataFrom( $this->getSemanticData( $diSubWikiPage ) );
 						$result[] = new SMWDIContainer( $semanticData );
@@ -145,7 +145,7 @@ Class SMWSQLStore2Readers {
 					try {
 						$dataItemId = SMWDataValueFactory::getDataItemId( $propertyTypeId );
 						$diHandler = SMWDataItemHandler::getDataItemHandlerForDIType( $dataItemId );
-						$result[] = $diHandler::dataItemFromDBKeys( $propertyTypeId, $dbkeys );
+						$result[] = $diHandler->dataItemFromDBKeys( $propertyTypeId, $dbkeys );
 					} catch ( SMWDataItemException $e ) {
 						// maybe type assignment changed since data was stored;
 						// don't worry, but we can only drop the data here

@@ -23,7 +23,7 @@ abstract class SMWDataItemHandler {
 	 *
 	 * @return array
 	 */
-	abstract static public function getTableFields();
+	abstract public function getTableFields();
 
 	/**
 	 * Method to return an array of fields=>values for a DataItem
@@ -71,7 +71,7 @@ abstract class SMWDataItemHandler {
 	 *
 	 * @return SMWDataItem
 	 */
-	abstract static public function dataItemFromDBKeys( $typeId, $dbkeys );
+	abstract public function dataItemFromDBKeys( $typeId, $dbkeys );
 
 	/**
 	 * Gets an object of the dataitem handler from the dataitem provided.

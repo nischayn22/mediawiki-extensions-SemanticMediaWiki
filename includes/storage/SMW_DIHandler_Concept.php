@@ -21,7 +21,7 @@ class SMWDIHandlerConcept extends SMWDataItemHandler {
 	 *
 	 * @return array
 	 */
-	static public function getTableFields(){
+	public function getTableFields(){
 		return array(
 			'objectfields' => array(
 				'concept_txt' => 'l',
@@ -102,7 +102,7 @@ class SMWDIHandlerConcept extends SMWDataItemHandler {
 	 *
 	 * @return SMWDataItem
 	 */
-	static public function dataItemFromDBKeys( $typeId, $dbkeys ) {
+	public function dataItemFromDBKeys( $typeId, $dbkeys ) {
 		if ( count( $dbkeys ) >= 5 ) {
 			return new SMWDIConcept( $dbkeys[0], smwfXMLContentEncode( $dbkeys[1] ),
 				$dbkeys[2], $dbkeys[3], $dbkeys[4] );

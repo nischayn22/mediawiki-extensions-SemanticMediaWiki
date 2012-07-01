@@ -19,7 +19,7 @@ class SMWDIHandlerGeoCoord extends SMWDataItemHandler {
 	 *
 	 * @return array
 	 */
-	static public function getTableFields(){
+	public function getTableFields(){
 		return array(
 			'objectfields' => array( 'lat' => 'f', 'lon' => 'f', 'alt' => 'f' ),
 			'indexes' => array( 'lat', 'lon', 'alt' ),
@@ -82,7 +82,7 @@ class SMWDIHandlerGeoCoord extends SMWDataItemHandler {
 	 *
 	 * @return SMWDataItem
 	 */
-	static public function dataItemFromDBKeys( $typeId, $dbkeys ) {
+	public function dataItemFromDBKeys( $typeId, $dbkeys ) {
 		return new SMWDIGeoCoord( array( 'lat' => (float)$dbkeys[0], 'lon' => (float)$dbkeys[1] ) );
 	}
 }

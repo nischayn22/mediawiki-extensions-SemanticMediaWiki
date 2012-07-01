@@ -19,7 +19,7 @@ class SMWDIHandlerString extends SMWDataItemHandler {
 	 *
 	 * @return array
 	 */
-	static public function getTableFields(){
+	public function getTableFields(){
 		return array(
 			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
 			'indexes' => array( 'value_num', 'value_xsd' ),
@@ -75,7 +75,7 @@ class SMWDIHandlerString extends SMWDataItemHandler {
 	 *
 	 * @return SMWDataItem
 	 */
-	static public function dataItemFromDBKeys( $typeId, $dbkeys ) {
+	public function dataItemFromDBKeys( $typeId, $dbkeys ) {
 		return new SMWDIString( $dbkeys[0] );
 	}
 }

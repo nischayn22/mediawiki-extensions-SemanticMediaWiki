@@ -19,7 +19,7 @@ class SMWDIHandlerBlob extends SMWDataItemHandler {
 	 *
 	 * @return array
 	 */
-	static public function getTableFields(){
+	public function getTableFields(){
 		return array(
 			'objectfields' => array( 'value_blob' => 'l' ),
 			'indexes' => array(),
@@ -75,7 +75,7 @@ class SMWDIHandlerBlob extends SMWDataItemHandler {
 	 *
 	 * @return SMWDataItem
 	 */
-	static public function dataItemFromDBKeys( $typeId, $dbkeys ) {
+	public function dataItemFromDBKeys( $typeId, $dbkeys ) {
 		return new SMWDIBlob( $dbkeys[0] );
 	}
 }
