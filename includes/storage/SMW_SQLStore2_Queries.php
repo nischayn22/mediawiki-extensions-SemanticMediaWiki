@@ -736,8 +736,7 @@ class SMWSQLStore2QueryEngine {
 						$where = $customSQL;
 					} else {
 						//Hack to get to the field used as index
-						$value = array_values( $keys );
-						$value = $value[$valueIndex];
+						$value = $keys[$valueField];
 
 						switch ( $description->getComparator() ) {
 							case SMW_CMP_EQ: $comparator = '='; break;
