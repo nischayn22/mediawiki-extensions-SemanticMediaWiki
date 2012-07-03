@@ -40,8 +40,10 @@ $magicWords['ar'] = array(
 	'show' => array( 0, 'عرض' ),
 	'info' => array( 0, 'معلومات' ),
 	'concept' => array( 0, 'مبدأ' ),
+	'subobject' => array( 0, 'كائن_فرعي' ),
+	'smwdoc' => array( 0, 'توثيق_سمو' ),
 	'set' => array( 0, 'مجموعة' ),
-	'set_recurring_event' => array( 0, 'ضبط_حدث_جاري' ),
+	'set_recurring_event' => array( 0, 'ضبط_حدث_متكرر' ),
 	'declare' => array( 0, 'إعلان' ),
 	'SMW_NOFACTBOX' => array( 0, '__لا_صندوق_حقيقة__' ),
 	'SMW_SHOWFACTBOX' => array( 0, '__عرض_صندوق_الحقيقة__' ),
@@ -60,7 +62,14 @@ $magicWords['arz'] = array(
 	'SMW_SHOWFACTBOX' => array( 0, '__عرض_صندوق_الحقيقة__', '__SHOWFACTBOX__' ),
 );
 
-/** Breton (Brezhoneg) */
+/** Assamese (অসমীয়া) */
+$magicWords['as'] = array(
+	'ask' => array( 0, 'সোধক' ),
+	'show' => array( 0, 'দেখুৱাওক' ),
+	'info' => array( 0, 'তথ্য' ),
+);
+
+/** Breton (brezhoneg) */
 $magicWords['br'] = array(
 	'ask' => array( 0, 'goulenn' ),
 	'show' => array( 0, 'diskouez' ),
@@ -86,10 +95,16 @@ $magicWords['de'] = array(
 
 /** Zazaki (Zazaki) */
 $magicWords['diq'] = array(
+	'ask' => array( 0, 'perske' ),
 	'show' => array( 0, 'bımocne' ),
+	'info' => array( 0, 'zanışe' ),
+	'concept' => array( 0, 'konsept' ),
+	'subobject' => array( 0, 'bınobce' ),
+	'set' => array( 0, 'saz' ),
+	'declare' => array( 0, 'ilaniye' ),
 );
 
-/** Spanish (Español) */
+/** Spanish (español) */
 $magicWords['es'] = array(
 	'ask' => array( 0, 'preguntar', 'pregunta' ),
 	'show' => array( 0, 'muestra', 'mostrar' ),
@@ -120,13 +135,28 @@ $magicWords['ka'] = array(
 	'show' => array( 0, 'ჩვენება' ),
 );
 
+/** Korean (한국어) */
+$magicWords['ko'] = array(
+	'ask' => array( 0, '묻기' ),
+	'show' => array( 0, '보이기' ),
+	'info' => array( 0, '정보' ),
+	'concept' => array( 0, '생각' ),
+	'subobject' => array( 0, '하위객체' ),
+	'smwdoc' => array( 0, 'smw문서' ),
+	'set' => array( 0, '설정' ),
+	'set_recurring_event' => array( 0, '반복_일정_설정' ),
+	'declare' => array( 0, '선언' ),
+	'SMW_NOFACTBOX' => array( 0, '__사실상자숨김__' ),
+	'SMW_SHOWFACTBOX' => array( 0, '__사실상자보이기__', '__사실상자표시__' ),
+);
+
 /** Luxembourgish (Lëtzebuergesch) */
 $magicWords['lb'] = array(
 	'ask' => array( 0, 'froen' ),
 	'show' => array( 0, 'weisen' ),
 );
 
-/** Macedonian (Македонски) */
+/** Macedonian (македонски) */
 $magicWords['mk'] = array(
 	'ask' => array( 0, 'прашај' ),
 	'show' => array( 0, 'прикажи' ),
@@ -175,6 +205,7 @@ $magicWords['nds-nl'] = array(
 $magicWords['nl'] = array(
 	'ask' => array( 0, 'vragen' ),
 	'show' => array( 0, 'weergeven' ),
+	'subobject' => array( 0, 'onderobject' ),
 	'set' => array( 0, 'instellen' ),
 	'set_recurring_event' => array( 0, 'herhalende_gebeurtenis_instellen' ),
 	'declare' => array( 0, 'declareren' ),
@@ -182,7 +213,7 @@ $magicWords['nl'] = array(
 	'SMW_SHOWFACTBOX' => array( 0, '__FEITENKADERWEERGEVEN__' ),
 );
 
-/** Polish (Polski) */
+/** Polish (polski) */
 $magicWords['pl'] = array(
 	'ask' => array( 0, 'pytanie' ),
 	'show' => array( 0, 'pokaż' ),
@@ -198,7 +229,7 @@ $magicWords['ps'] = array(
 	'info' => array( 0, 'مالومات', 'info' ),
 );
 
-/** Serbian (Cyrillic script) (‪Српски (ћирилица)‬) */
+/** Serbian (Cyrillic script) (‪српски (ћирилица)‬) */
 $magicWords['sr-ec'] = array(
 	'ask' => array( 0, 'питај' ),
 	'show' => array( 0, 'прикажи' ),
@@ -209,7 +240,7 @@ $magicWords['sr-ec'] = array(
 	'declare' => array( 0, 'одреди' ),
 );
 
-/** Serbian (Latin script) (‪Srpski (latinica)‬) */
+/** Serbian (Latin script) (‪srpski (latinica)‬) */
 $magicWords['sr-el'] = array(
 	'ask' => array( 0, 'pitaj' ),
 	'show' => array( 0, 'prikaži' ),
@@ -222,14 +253,14 @@ $magicWords['sr-el'] = array(
 	'SMW_SHOWFACTBOX' => array( 0, '__PRIKAŽIČINJENICE__', '__PRIKAŽI_ČINJENICE__' ),
 );
 
-/** Swedish (Svenska) */
+/** Swedish (svenska) */
 $magicWords['sv'] = array(
 	'ask' => array( 0, 'fråga', 'ask' ),
 	'show' => array( 0, 'visa', 'show' ),
 	'concept' => array( 0, 'koncept', 'concept' ),
 );
 
-/** Tatar (Cyrillic script) (Татарча) */
+/** Tatar (Cyrillic script) (татарча) */
 $magicWords['tt-cyrl'] = array(
 	'ask' => array( 0, 'сорау' ),
 	'show' => array( 0, 'күрсәт' ),

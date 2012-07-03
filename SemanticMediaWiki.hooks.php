@@ -24,10 +24,7 @@ final class SMWHooks {
 	 * @return true
 	 */
 	public static function onSchemaUpdate( DatabaseUpdater $updater = null ) {
-		// Method was added in MW 1.19.
-		if ( is_callable( array( $updater, 'addPostDatabaseUpdateMaintenance' ) ) ) {
-			$updater->addPostDatabaseUpdateMaintenance( 'SMWSetupScript' );
-		}
+		$updater->addExtensionUpdate( array( 'SMWStore::setupStore' ) );
 
 		return true;
 	}
@@ -276,6 +273,14 @@ final class SMWHooks {
 		//store tests
 		$testDirStore = $testDir . 'includes/storage/';
 		$files[] = $testDirStore . 'SMW_SQLStore2Test.php';
+
+		//dataitems tests
+		$testDirDI = $testDir . 'includes/dataitems/';
+		$files[] = $testDirDI . 'SMW_DI_NumberTest.php';
+		$files[] = $testDirDI . 'SMW_DI_BoolTest.php';
+		$files[] = $testDirDI . 'SMW_DI_BlobTest.php';
+		$files[] = $testDirDI . 'SMW_DI_StringTest.php';
+		$files[] = $testDirDI . 'SMW_DI_GeoCoordTest.php';
 
 		return true;
 	}

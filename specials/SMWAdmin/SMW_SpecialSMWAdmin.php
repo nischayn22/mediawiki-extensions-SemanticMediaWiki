@@ -60,8 +60,7 @@ class SMWAdmin extends SpecialPage {
 				ob_start();
 				print "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"  \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\" dir=\"ltr\">\n<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><title>Setting up Storage for Semantic MediaWiki</title></head><body><p><pre>";
 				header( "Content-type: text/html; charset=UTF-8" );
-				$result = smwfGetStore()->setup();
-				wfRunHooks( 'smwInitializeTables' );
+				$result = SMWStore::setupStore();
 				print '</pre></p>';
 				if ( $result === true ) {
 					print '<p><b>' . wfMsg( 'smw_smwadmin_setupsuccess' ) . "</b></p>\n";
@@ -75,22 +74,22 @@ class SMWAdmin extends SpecialPage {
 			}
 		} elseif ( $smwgAdminRefreshStore && ( $action == 'refreshstore' ) ) { // managing refresh jobs for the store
 			$sure = $wgRequest->getText( 'rfsure' );
+			$title = SpecialPage::getTitleFor( 'SMWAdmin' );
 			if ( $sure == 'yes' ) {
 				if ( is_null( $refreshjob ) ) { // careful, there might be race conditions here
-					$title = SpecialPage::getTitleFor( 'SMWAdmin' );
 					$newjob = new SMWRefreshJob( $title, array( 'spos' => 1, 'prog' => 0, 'rc' => 2 ) );
 					$newjob->insert();
-					$wgOut->addHTML( '<p>' . wfMsg( 'smw_smwadmin_updatestarted' ) . '</p>' );
+					$wgOut->addHTML( '<p>' . wfMsg( 'smw_smwadmin_updatestarted', '<a href="' . htmlspecialchars( $title->getFullURL() ) . '">Special:SMWAdmin</a>' ) . '</p>' );
 				} else {
-					$wgOut->addHTML( '<p>' . wfMsg( 'smw_smwadmin_updatenotstarted' ) . '</p>' );
+					$wgOut->addHTML( '<p>' . wfMsg( 'smw_smwadmin_updatenotstarted', '<a href="' . htmlspecialchars( $title->getFullURL() ) . '">Special:SMWAdmin</a>' ) . '</p>' );
 				}
 			} elseif ( $sure == 'stop' ) {
 				$dbw = wfGetDB( DB_MASTER );
 				// delete (all) existing iteration jobs
 				$dbw->delete( 'job', array( 'job_cmd' => 'SMWRefreshJob' ), __METHOD__ );
-				$wgOut->addHTML( '<p>' . wfMsg( 'smw_smwadmin_updatestopped' ) . '</p>' );
+				$wgOut->addHTML( '<p>' . wfMsg( 'smw_smwadmin_updatestopped', '<a href="' . htmlspecialchars( $title->getFullURL() ) . '">Special:SMWAdmin</a>' ) . '</p>' );
 			} else {
-				$wgOut->addHTML( '<p>' . wfMsg( 'smw_smwadmin_updatenotstopped' ) . '</p>' );
+				$wgOut->addHTML( '<p>' . wfMsg( 'smw_smwadmin_updatenotstopped', '<a href="' . htmlspecialchars( $title->getFullURL() ) . '">Special:SMWAdmin</a>' ) . '</p>' );
 			}
 			return;
 		}
