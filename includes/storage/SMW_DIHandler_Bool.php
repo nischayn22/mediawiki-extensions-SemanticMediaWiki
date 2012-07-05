@@ -21,8 +21,8 @@ class SMWDIHandlerBoolean extends SMWDataItemHandler {
 	 */
 	public function getTableFields(){
 		return array(
-			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
-			'indexes' => array( 'value_num', 'value_xsd' ),
+			'objectfields' => array( 'value_bool' => 'b' ),
+			'indexes' => array( 'value_bool' ),
 		);
 	}
 
@@ -32,17 +32,9 @@ class SMWDIHandlerBoolean extends SMWDataItemHandler {
 	 * @return array
 	 */
 	public function getWhereConds( SMWDataItem $dataItem ) {
-		if ( $dataItem->getBoolean() ) {
-			return array(
-				'value_xsd' => '1',
-				'value_num' => 1
-				);
-		} else {
-			return array(
-				'value_xsd' => '0',
-				'value_num' => 0
-				);
-		}
+		return array(
+			'value_bool' => $dataItem->getBoolean() ? 1 : 0,
+		);
 	}
 
 	/**
@@ -53,17 +45,9 @@ class SMWDIHandlerBoolean extends SMWDataItemHandler {
 	 * @return array
 	 */
 	public function getInsertValues( SMWDataItem $dataItem ) {
-		if ( $dataItem->getBoolean() ) {
-			return array(
-				'value_xsd' => '1',
-				'value_num' => 1
-				);
-		} else {
-			return array(
-				'value_xsd' => '0',
-				'value_num' => 0
-				);
-		}
+		return array(
+			'value_bool' => $dataItem->getBoolean() ? 1 : 0,
+		);
 	}
 
 	/**
@@ -72,7 +56,7 @@ class SMWDIHandlerBoolean extends SMWDataItemHandler {
 	 * @return string
 	 */
 	public function getIndexField() {
-		return 'value_num';
+		return 'value_bool';
 	}
 
 	/**
@@ -82,7 +66,7 @@ class SMWDIHandlerBoolean extends SMWDataItemHandler {
 	 * @return string
 	 */
 	public function getLabelField() {
-		return 'value_xsd';
+		return 'value_bool';
 	}
 
 	/**
@@ -94,6 +78,16 @@ class SMWDIHandlerBoolean extends SMWDataItemHandler {
 	 * @return SMWDataItem
 	 */
 	public function dataItemFromDBKeys( $typeId, $dbkeys ) {
-		return new SMWDIBoolean( ( $dbkeys[0] == '1' ) );
+		global $wgDBtype;
+		$value = true;
+
+		//PgSQL returns as t and f and need special handling http://archives.postgresql.org/pgsql-php/2010-02/msg00005.php
+		if ( $wgDBtype == 'postgres' ) {
+			$value = $dbkeys[0] == 't' ;
+		} else {
+			$value = $dbkeys[0] == '1' ;
+		}
+
+		return new SMWDIBoolean( $value );
 	}
 }

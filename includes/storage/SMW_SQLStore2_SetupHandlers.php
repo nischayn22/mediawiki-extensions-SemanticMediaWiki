@@ -67,6 +67,7 @@ Class SMWSQLStore2SetupHandlers {
 
 		// Repeatedly used DB field types defined here for convenience.
 		$dbtypes = array(
+			'b' => ( $wgDBtype == 'postgres' ? 'BOOLEAN' : 'TINYINT(1)' ),
 			't' => SMWSQLHelpers::getStandardDBType( 'title' ),
 			'l' => SMWSQLHelpers::getStandardDBType( 'blob' ),
 			'f' => ( $wgDBtype == 'postgres' ? 'DOUBLE PRECISION' : 'DOUBLE' ),
