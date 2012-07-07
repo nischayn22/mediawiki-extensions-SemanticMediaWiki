@@ -117,8 +117,8 @@ class SMWSQLStore2 extends SMWStore {
 
 	/// Use special tables for Very Important Properties
 	public static $special_tables = array(
-		'_TYPE' => 'smw_spec2',
-		'_URI'  => 'smw_spec2',
+		'_TYPE' => 'smw_uri',
+		'_URI'  => 'smw_uri',
 		'_INST' => 'smw_inst2',
 		'_UNIT' => 'smw_spec2',
 		'_IMPO' => 'smw_spec2',
@@ -138,8 +138,8 @@ class SMWSQLStore2 extends SMWStore {
 	/// Default tables to use for storing data of certain types.
 	public static $di_type_tables = array(
 		SMWDataItem::TYPE_NUMBER     => 'smw_di_number',
-		SMWDataItem::TYPE_STRING     => 'smw_di_string',
-		SMWDataItem::TYPE_BLOB       => 'smw_di_string',
+		SMWDataItem::TYPE_STRING     => 'smw_di_blob',
+		SMWDataItem::TYPE_BLOB       => 'smw_di_blob',
 		SMWDataItem::TYPE_BOOLEAN    => 'smw_di_bool',
 		SMWDataItem::TYPE_URI        => 'smw_di_uri',
 		SMWDataItem::TYPE_TIME       => 'smw_di_time',
@@ -1286,6 +1286,7 @@ class SMWSQLStore2 extends SMWStore {
 			self::$prop_tables[$tableName] = SMWSQLStore2Table::newFromDIType( $diType, $tableName );
 		}
 		self::$prop_tables['smw_spec2']->specpropsonly = true;
+		self::$prop_tables['smw_uri']->specpropsonly = true;
 		self::$prop_tables['smw_subs2']->fixedproperty = '_SUBC';
 		self::$prop_tables['smw_subp2']->fixedproperty = '_SUBP';
 		self::$prop_tables['smw_inst2']->fixedproperty = '_INST';

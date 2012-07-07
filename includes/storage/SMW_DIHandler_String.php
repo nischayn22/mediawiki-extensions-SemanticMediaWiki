@@ -19,10 +19,10 @@ class SMWDIHandlerString extends SMWDataItemHandler {
 	 *
 	 * @return array
 	 */
-	public function getTableFields(){
+	public function getTableFields() {
 		return array(
-			'objectfields' => array( 'value_xsd' => 't', 'value_num' => 'f' ),
-			'indexes' => array( 'value_num', 'value_xsd' ),
+			'objectfields' => array( 'value_blob' => 'l', 'value_hash' => 't' ),
+			'indexes' => array( 'value_hash' ),
 		);
 	}
 
@@ -32,7 +32,7 @@ class SMWDIHandlerString extends SMWDataItemHandler {
 	 * @return array
 	 */
 	public function getWhereConds( SMWDataItem $dataItem ) {
-		return array( 'value_xsd' => $dataItem->getString() );
+		return array( 'value_hash' => self::makeHash( $dataItem->getString() ) );
 	}
 
 	/**
@@ -43,8 +43,11 @@ class SMWDIHandlerString extends SMWDataItemHandler {
 	 * @return array
 	 */
 	public function getInsertValues( SMWDataItem $dataItem ) {
-		//TODO - what to insert in value_num?? How was this done before?
-		return array( 'value_xsd' => $dataItem->getString() );
+		$text = $dataItem->getString();
+		return array(
+			'value_blob' => strlen( $text ) <= 255 ? '' : $text,
+			'value_hash' => self::makeHash( $text ),
+		);
 	}
 
 	/**
@@ -53,8 +56,7 @@ class SMWDIHandlerString extends SMWDataItemHandler {
 	 * @return string
 	 */
 	public function getIndexField() {
-		//is the typeid still relevant here? How to use that?
-		return 'value_xsd';
+		return 'value_hash';
 	}
 
 	/**
@@ -64,7 +66,8 @@ class SMWDIHandlerString extends SMWDataItemHandler {
 	 * @return string
 	 */
 	public function getLabelField() {
-		return 'value_xsd';
+		//What is the best choice to return here?
+		return 'value_hash';
 	}
 
 	/**
@@ -76,6 +79,24 @@ class SMWDIHandlerString extends SMWDataItemHandler {
 	 * @return SMWDataItem
 	 */
 	public function dataItemFromDBKeys( $typeId, $dbkeys ) {
-		return new SMWDIString( $dbkeys[0] );
+		$text = $dbkeys[0] == '' ? $dbkeys[1] : $dbkeys[0];
+		return new SMWDIString( $text );
+	}
+
+	/**
+	* Method to make a hashed representation for strings of length>255
+	* to be used for selecting and sorting
+	*
+	* @since SMW.storerewrite
+	* @param $string string
+	*
+	* @return string
+	*/
+	static protected function makeHash( $string ) {
+		if( strlen( $string ) <= 255 ) {
+			return $string;
+		} else {
+			return substr( $string, 0, 254 ) . md5( $string );
+		}
 	}
 }
