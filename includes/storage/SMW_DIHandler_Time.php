@@ -12,7 +12,7 @@
  * @author Nischay Nahata
  * @ingroup SMWDataItemsHandlers
  */
-class SMWDIHandlerTime extends SMWDataItemHandler {
+class SMWDIHandlerTime implements SMWDataItemHandler {
 
 	/**
 	 * Method to return array of fields and indexes for a DI type

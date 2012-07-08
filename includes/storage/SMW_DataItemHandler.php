@@ -1,6 +1,6 @@
 <?php
 /**
- * File holding class SMWDataItemHandler, the base for all dataitem handlers in SMW.
+ * File holding interface SMWDataItemHandler and factory class SMWDIHandlerFactory, the base for all dataitem handlers in SMW.
  *
  * @author Nischay Nahata
  *
@@ -9,13 +9,13 @@
  */
 
 /**
- * Objects of this type represent all store layout that is known about a certain dataitem
+ * Classes implementing this represent all store layout that is known about a certain dataitem
  *
  * @since SMW.storerewrite
  *
  * @ingroup SMWDataItemsHandlers
  */
-abstract class SMWDataItemHandler {
+interface SMWDataItemHandler {
 
 	/**
 	 * Method to return array of fields and indexes for a DI type
@@ -23,7 +23,7 @@ abstract class SMWDataItemHandler {
 	 *
 	 * @return array
 	 */
-	abstract public function getTableFields();
+	public function getTableFields();
 
 	/**
 	 * Method to return an array of fields=>values for a DataItem
@@ -32,7 +32,7 @@ abstract class SMWDataItemHandler {
 	 * @param SMWDataItem
 	 * @return array
 	 */
-	abstract public function getWhereConds( SMWDataItem $dataItem );
+	public function getWhereConds( SMWDataItem $dataItem );
 
 	/**
 	 * Method to return an array of fields=>values for a DataItem
@@ -43,7 +43,7 @@ abstract class SMWDataItemHandler {
 	 * @param SMWDataItem
 	 * @return array
 	 */
-	abstract public function getInsertValues( SMWDataItem $dataItem );
+	public function getInsertValues( SMWDataItem $dataItem );
 
 	/**
 	 * Method to return the field used to select this type of DataItem
@@ -55,7 +55,7 @@ abstract class SMWDataItemHandler {
 	 * @since SMW.storerewrite
 	 * @return string
 	 */
-	abstract public function getIndexField();
+	public function getIndexField();
 
 	/**
 	 * Method to return the field used to select this type of DataItem
@@ -68,7 +68,7 @@ abstract class SMWDataItemHandler {
 	 * @since SMW.storerewrite
 	 * @return string
 	 */
-	abstract public function getLabelField();
+	public function getLabelField();
 
 	/**
 	 * Method to create a dataitem from a type ID and array of DB keys.
@@ -79,7 +79,18 @@ abstract class SMWDataItemHandler {
 	 *
 	 * @return SMWDataItem
 	 */
-	abstract public function dataItemFromDBKeys( $typeId, $dbkeys );
+	public function dataItemFromDBKeys( $typeId, $dbkeys );
+
+}
+
+/**
+ * Factory Class for creating objects of DIHandlers
+ *
+ * @since SMW.storerewrite
+ *
+ * @ingroup SMWDataItemsHandlers
+ */
+class SMWDIHandlerFactory {
 
 	/**
 	 * Gets an object of the dataitem handler from the dataitem provided.

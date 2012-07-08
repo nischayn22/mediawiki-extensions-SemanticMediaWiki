@@ -223,7 +223,7 @@ Class SMWSQLStore2Writers {
 					///since SMW.storerewrite we get the array of where conds (fieldname=>value) from the DIHander class
 					//This causes a database error when called for special properties as they have different table structure
 					//unknown to the DIHandlers. Do we really need different table structure for special properties?
-					$diHandler = SMWDataItemHandler::getDataItemHandlerForDIType( $di->getDIType() );
+					$diHandler = SMWDIHandlerFactory::getDataItemHandlerForDIType( $di->getDIType() );
 					$uvals = array_merge( $uvals, $diHandler->getInsertValues( $di ) );
 				}
 

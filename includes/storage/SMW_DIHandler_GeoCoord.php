@@ -12,7 +12,7 @@
  * @author Nischay Nahata
  * @ingroup SMWDataItemsHandlers
  */
-class SMWDIHandlerGeoCoord extends SMWDataItemHandler {
+class SMWDIHandlerGeoCoord implements SMWDataItemHandler {
 
 	/**
 	 * Method to return array of fields and indexes for a DI type

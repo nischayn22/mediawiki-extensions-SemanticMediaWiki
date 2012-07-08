@@ -12,7 +12,7 @@
  * @author Nischay Nahata
  * @ingroup SMWDataItemsHandlers
  */
-class SMWDIHandlerContainer extends SMWDataItemHandler {
+class SMWDIHandlerContainer implements SMWDataItemHandler {
 
 	/**
 	 * Method to return array of fields and indexes for a DI type
@@ -81,7 +81,7 @@ class SMWDIHandlerContainer extends SMWDataItemHandler {
 		foreach ( reset( $dbkeys ) as $value ) {
 			if ( is_array( $value ) && ( count( $value ) == 2 ) ) {
 				$diProperty = new SMWdiPropertyroperty( reset( $value ), false );
-				$diHandler = SMWDataItemHandler::getDataItemHandlerForDIType( $diProperty->getDIType() );
+				$diHandler = SMWDIHandlerFactory::getDataItemHandlerForDIType( $diProperty->getDIType() );
 				$diValue= $diHandler->dataItemFromDBKeys( $diProperty->findPropertyTypeID(), end( $value ) );
 				$semanticData->addPropertyObjectValue( $diProperty, $diValue );
 			}

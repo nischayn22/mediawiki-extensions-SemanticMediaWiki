@@ -710,7 +710,7 @@ class SMWSQLStore2QueryEngine {
 
 		if ( $description instanceof SMWValueDescription ) {
 			$dataItem = $description->getDataItem();
-			$diHandler = SMWDataItemHandler::getDataItemHandlerForDIType( $dataItem->getDIType() );
+			$diHandler = SMWDIHandlerFactory::getDataItemHandlerForDIType( $dataItem->getDIType() );
 			$keys = $diHandler->getWhereConds( $dataItem );
 
 			// Try comparison based on value field and comparator.

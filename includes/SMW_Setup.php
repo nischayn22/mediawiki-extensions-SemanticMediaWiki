@@ -254,6 +254,7 @@ function smwfRegisterClasses() {
 	$wgAutoloadClasses['SMWSQLStore2SpecialPageHandlers']  = $stoDir . 'SMW_SQLStore2_SpecialPageHandlers.php';
 	$wgAutoloadClasses['SMWSQLStore2SetupHandlers']        = $stoDir . 'SMW_SQLStore2_SetupHandlers.php';
 
+	$wgAutoloadClasses['SMWDIHandlerFactory']              = $stoDir . 'SMW_DataItemHandler.php';
 	$wgAutoloadClasses['SMWDataItemHandler']               = $stoDir . 'SMW_DataItemHandler.php';
 	$wgAutoloadClasses['SMWDIHandlerProperty']             = $stoDir . 'SMW_DIHandler_Property.php';
 	$wgAutoloadClasses['SMWDIHandlerBoolean']              = $stoDir . 'SMW_DIHandler_Bool.php';

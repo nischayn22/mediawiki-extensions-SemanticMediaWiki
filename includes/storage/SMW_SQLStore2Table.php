@@ -127,7 +127,7 @@ class SMWSQLStore2Table {
 	 * @param const $DIType
 	 */
 	protected function setFields( $DIType ) {
-		$diHandler = SMWDataItemHandler::getDataItemHandlerForDIType( $DIType );
+		$diHandler = SMWDIHandlerFactory::getDataItemHandlerForDIType( $DIType );
 		$fields = $diHandler->getTableFields();
 		$this->objectfields = $fields['objectfields'];
 		$this->indexes = $fields['indexes'];
