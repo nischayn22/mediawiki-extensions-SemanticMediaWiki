@@ -373,6 +373,8 @@ class SMWDIProperty extends SMWDataItem {
 				'_SF_DF' => array( '__spf', true ), // Semantic Form's default form property
 				'_SF_AF' => array( '__spf', true ),  // Semantic Form's alternate form property
 				'_SOBJ'  =>  array( '_wpg', true ), // "has subobject"
+				'_ASK'  =>  array( '_wpg', true ), // "has ask query"
+				'_ASKText'  =>  array( '_txt', true ), // "ask query string"
 			);
 
 		foreach ( $datatypeLabels as $typeid => $label ) {

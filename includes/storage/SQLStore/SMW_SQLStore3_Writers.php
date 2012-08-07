@@ -92,6 +92,11 @@ Class SMWSQLStore3Writers {
 		foreach ( $data->getPropertyValues( new SMWDIProperty( '_SOBJ' ) ) as $di ) {
 			$this->doDataUpdate( $di->getSemanticData() );
 		}
+		// recursively update Ask query information 
+		// TODO - handle subobjects and ask together
+		foreach ( $data->getPropertyValues( new SMWDIProperty( '_ASK' ) ) as $di ) {
+			$this->doDataUpdate( $di->getSemanticData() );
+		}
 		$updates = array(); // collect data for bulk updates; format: tableid => updatearray
 		$this->prepareDBUpdates( $updates, $data, $sid, $subject );
 

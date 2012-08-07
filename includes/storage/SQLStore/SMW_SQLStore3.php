@@ -112,6 +112,8 @@ class SMWSQLStore3 extends SMWStore {
 		'_CDAT' => 30,
 		'_NEWP' => 31,
 		'_LEDT' => 32,
+		'_ASK' => 33,
+		'_ASKText' => 34,
 	);
 
 	/// Use special tables for Very Important Properties
@@ -134,6 +136,8 @@ class SMWSQLStore3 extends SMWStore {
 		'_CDAT'  => 'smw_cdat',
 		//'_ERRP', '_SKEY' // no special table
 		'_LIST' => 'smw_list',
+		'_ASK' => 'smw_ask',
+		'_ASKText' => 'smw_ask_text',
 	);
 
 	/// Default tables to use for storing data of certain types.
